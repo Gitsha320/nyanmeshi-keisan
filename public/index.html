@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta property="og:type" content="website">
+<meta property="og:title" content="猫のごはんの量計算｜にゃん飯計算機">
+<meta property="og:description" content="猫の体重とキャットフードのカロリーから、1日の量と月のフード代がわかります。">
+<title>猫のごはんの量計算｜1日何グラム？月のフード代も にゃん飯計算機</title>
+<meta name="description" content="猫の体重とキャットフードのカロリーから、1日に必要なごはんの量（g）と、1袋が何日もつか、月のフード代がわかる計算機です。2つのフードの比較もできます。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* 計量カップの「めもり」が主役。上から 入力 → カップ → 比較 → 計算のしかた */
+:root{
+  --bg:#eef4f2; --paper:#ffffff; --ink:#1d2a27; --sub:#5a6b66; --line:#d3e0dc;
+  --green:#2f6f62; --green-soft:#dcece7; --on-green:#ffffff;
+  --kibble:#d4922a; --kibble-soft:#f8ead2; --kibble-ink:#4a2f05;
+  --rose:#c4566a; --rose-soft:#f8e3e7;
+  --f-body:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+  --f-num:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --paper:#18221f; --ink:#e6efec; --sub:#9db0aa; --line:#2a3834;
+  --green:#5fbfaa; --green-soft:#17302a; --on-green:#0c1a17;
+  --kibble:#e8a943; --kibble-soft:#3a2c14; --kibble-ink:#f8ead2;
+  --rose:#ec8496; --rose-soft:#3b2026; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --paper:#18221f; --ink:#e6efec; --sub:#9db0aa; --line:#2a3834;
+  --green:#5fbfaa; --green-soft:#17302a; --on-green:#0c1a17;
+  --kibble:#e8a943; --kibble-soft:#3a2c14; --kibble-ink:#f8ead2;
+  --rose:#ec8496; --rose-soft:#3b2026; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.75;padding-inline:16px;padding-block:18px 60px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{margin:0;line-height:1.35;text-wrap:balance}
+p{margin:0}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.small{font-size:12.5px}
+.muted{color:var(--sub)}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:46px;height:46px;border-radius:14px;background:var(--green);display:grid;place-items:center;flex:none;color:var(--on-green)}
+h1{font-size:clamp(24px,6vw,32px);font-weight:800}
+.lede{color:var(--sub);max-width:60ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.card h2{font-size:17px}
+.example{align-self:flex-start;font-size:12.5px;background:var(--kibble-soft);color:var(--ink);border-radius:6px;padding:2px 8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.field>.lbl{font-weight:800;font-size:14px}
+.row{display:flex;align-items:center;gap:10px}
+.row input[type=range]{flex:1;min-width:0;accent-color:var(--green)}
+.box{display:flex;align-items:baseline;gap:4px;border:2px solid var(--line);border-radius:10px;padding:4px 10px;background:var(--bg)}
+.box:focus-within{border-color:var(--green)}
+.box input{width:66px;border:0;background:transparent;font:700 18px var(--f-num);color:var(--ink);text-align:right;padding:0;min-width:0}
+.box input:focus{outline:none}
+.box span{font-size:12.5px;color:var(--sub);white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{appearance:none;font:700 13px var(--f-body);border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--green);border-color:var(--green);color:var(--on-green)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--kibble);outline-offset:2px}
+/* フード入力 */
+.foods{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.food{border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.food .tag{display:inline-flex;align-items:center;gap:8px;font-weight:800}
+.dot{width:12px;height:12px;border-radius:50%}
+.food .namebox{border:2px solid var(--line);border-radius:10px;background:var(--paper);padding:6px 10px;font:700 14px var(--f-body);color:var(--ink);width:100%}
+.food .namebox:focus{outline:none;border-color:var(--green)}
+.food .box{background:var(--paper)}
+.food .box input{width:64px}
+.food .pair{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;flex-wrap:wrap}
+.toggleB{appearance:none;border:1.5px dashed var(--line);background:transparent;color:var(--sub);border-radius:14px;font:700 14px var(--f-body);cursor:pointer;min-height:120px}
+/* 結果 */
+.result{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.cupwrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cupwrap svg{width:170px;height:auto}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
+.stat{border-radius:12px;padding:10px 12px;background:var(--bg)}
+.stat span{display:block;font-size:12px;font-weight:700;color:var(--sub)}
+.stat b{font:700 22px var(--f-num)}
+.stat b small{font-size:13px;font-weight:500;margin-left:2px}
+.stat.main{background:var(--green-soft);grid-column:1/-1}
+.stat.main b{font-size:32px;color:var(--green)}
+.cmp{display:flex;flex-direction:column;gap:10px}
+.cmp-row{display:grid;grid-template-columns:90px 1fr 110px;gap:10px;align-items:center;font-size:13.5px}
+.cmp-row .bar{height:22px;border-radius:6px;background:var(--bg);overflow:hidden}
+.cmp-row .bar i{display:block;height:100%;border-radius:6px;transition:width .3s ease}
+.cmp-row .num{text-align:right;font-weight:700}
+.cmp-note{font-size:13.5px;padding:8px 12px;border-radius:10px;background:var(--kibble-soft)}
+.warn{font-size:13.5px;padding:8px 12px;border-radius:10px;background:var(--rose-soft)}
+/* PR */
+.pr{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.pr-h{font-weight:800;display:flex;gap:8px;align-items:center}
+.pr-tag{font-size:11px;font-weight:700;color:var(--sub);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{text-decoration:none;font-weight:700;font-size:13.5px;border-radius:10px;padding:8px 12px;border:1.5px solid var(--line);color:var(--ink);background:var(--bg)}
+.links a:hover{border-color:var(--green)}
+.links a.primary{background:var(--green);border-color:var(--green);color:var(--on-green)}
+/* 計算のしかた */
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px}
+.formula span{padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.formula b{color:var(--green)}
+.formula i{font-style:normal;color:var(--sub);font-weight:800}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:380px}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--sub)}
+td.num{font-family:var(--f-num)}
+.tblwrap{overflow-x:auto}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tip{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tip b{display:block;margin-bottom:2px}
+.tip p{color:var(--sub);font-size:14px}
+footer{font-size:12px;color:var(--sub);display:flex;flex-direction:column;gap:4px}
+footer a{color:inherit}
+.px{position:absolute;width:1px;height:1px;border:0}
+@media (max-width:640px){
+  .grid2,.foods,.tips{grid-template-columns:1fr}
+  .result{grid-template-columns:1fr;justify-items:center}
+  .stats{width:100%}
+  .cmp-row{grid-template-columns:70px 1fr 92px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <span class="mark" aria-hidden="true">
+      <svg viewBox="0 0 28 28" width="28" height="28"><path d="M5 9h18l-2 14a2 2 0 0 1-2 1.7H9A2 2 0 0 1 7 23z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 13h4M9 17h6M9 21h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M10 9l1.6-4 2.4 2.4L16.4 5 18 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    </span>
+    <div>
+      <h1>にゃん飯計算機</h1>
+      <p class="small muted">猫のごはん、1日何グラム？ 月のフード代もいっしょに計算します</p>
+    </div>
+  </header>
+
+  <section class="card" aria-label="猫のこと">
+    <span class="example" id="exampleTag">はじめは例（体重4kg・避妊去勢済みの成猫）が入っています</span>
+    <div class="grid2">
+      <div class="field">
+        <label for="w">体重</label>
+        <div class="row"><input type="range" id="wRange" min="0.5" max="9" step="0.1" value="4" aria-label="体重スライダー"><div class="box"><input id="w" type="number" inputmode="decimal" min="0.3" max="15" step="0.1" value="4"><span>kg</span></div></div>
+      </div>
+      <div class="field">
+        <span class="lbl">ごはんの回数</span>
+        <div class="seg" id="meals">
+          <button type="button" data-v="1" aria-pressed="false">1回</button>
+          <button type="button" data-v="2" aria-pressed="true">2回</button>
+          <button type="button" data-v="3" aria-pressed="false">3回</button>
+          <button type="button" data-v="4" aria-pressed="false">4回</button>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <span class="lbl">いまの状態</span>
+      <div class="seg" id="stage">
+        <button type="button" data-v="2.5" aria-pressed="false">子猫（1歳まで）</button>
+        <button type="button" data-v="1.2" aria-pressed="true">避妊・去勢済みの成猫</button>
+        <button type="button" data-v="1.4" aria-pressed="false">避妊・去勢していない成猫</button>
+        <button type="button" data-v="1.0" aria-pressed="false">太りやすい・あまり動かない</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="フード">
+    <h2>フード（袋のうらを見て入れてください）</h2>
+    <div class="foods">
+      <div class="food" id="foodA">
+        <span class="tag"><i class="dot" style="background:var(--green)"></i><input class="namebox" id="nameA" value="いまのフード" aria-label="フードAの名前"></span>
+        <div class="pair"><span>カロリー（100gあたり）</span><div class="box"><input id="kcalA" type="number" inputmode="decimal" value="380"><span>kcal</span></div></div>
+        <div class="pair"><span>1袋の重さ</span><div class="box"><input id="bagA" type="number" inputmode="decimal" value="2000"><span>g</span></div></div>
+        <div class="pair"><span>1袋の値段</span><div class="box"><input id="priceA" type="number" inputmode="decimal" value="3000"><span>円</span></div></div>
+      </div>
+      <div class="food" id="foodB">
+        <span class="tag"><i class="dot" style="background:var(--kibble)"></i><input class="namebox" id="nameB" value="気になるフード" aria-label="フードBの名前"></span>
+        <div class="pair"><span>カロリー（100gあたり）</span><div class="box"><input id="kcalB" type="number" inputmode="decimal" value="350"><span>kcal</span></div></div>
+        <div class="pair"><span>1袋の重さ</span><div class="box"><input id="bagB" type="number" inputmode="decimal" value="1500"><span>g</span></div></div>
+        <div class="pair"><span>1袋の値段</span><div class="box"><input id="priceB" type="number" inputmode="decimal" value="2800"><span>円</span></div></div>
+      </div>
+    </div>
+    <p class="small muted">カロリーは「代謝エネルギー」「ME」と書かれていることもあります。1kgあたりで書かれていたら10で割ってください。比べないときはBのカロリーを空にすればOKです。</p>
+  </section>
+
+  <section class="card" aria-live="polite" aria-label="結果">
+    <div class="result">
+      <div class="cupwrap">
+        <svg viewBox="0 0 170 190" role="img" aria-label="1回分の量を計量カップで表した図" id="cup"></svg>
+        <span class="small muted">1回分（<span id="cupName">いまのフード</span>）</span>
+      </div>
+      <div class="stats">
+        <div class="stat main"><span>1日のごはん（<span id="mainName">いまのフード</span>）</span><b class="num" id="gDay">63<small>g</small></b></div>
+        <div class="stat"><span>1回あたり</span><b class="num" id="gMeal">31<small>g</small></b></div>
+        <div class="stat"><span>1日に必要なカロリー</span><b class="num" id="kcalDay">238<small>kcal</small></b></div>
+        <div class="stat"><span>1袋がもつ日数</span><b class="num" id="days">32<small>日</small></b></div>
+        <div class="stat"><span>1か月のフード代</span><b class="num" id="month">2,860<small>円</small></b></div>
+      </div>
+    </div>
+    <div class="cmp" id="cmp">
+      <h3 style="font-size:15px">1か月のフード代をくらべる</h3>
+      <div id="cmpRows"></div>
+      <p class="cmp-note" id="cmpNote"></p>
+    </div>
+    <p class="warn" id="warn" hidden></p>
+  </section>
+
+  <aside class="pr" aria-label="広告">
+    <p class="pr-h"><span class="pr-tag">PR</span>楽天市場でフードを見る</p>
+    <div class="links" id="shopLinks"></div>
+  </aside>
+
+  <section class="card">
+    <h2>計算のしかた</h2>
+    <div class="formula">
+      <span>体重<sup>0.75</sup> × <b>70</b></span><i>＝</i><span>安静時に必要なカロリー</span><i>×</i><span>状態の係数</span><i>＝</i><span><b>1日に必要なカロリー</b></span>
+    </div>
+    <div class="formula">
+      <span>1日に必要なカロリー</span><i>÷</i><span>フード100gのカロリー</span><i>×</i><span><b>100</b></span><i>＝</i><span><b>1日のグラム数</b></span>
+    </div>
+    <div class="tblwrap"><table>
+      <thead><tr><th>いまの状態</th><th>係数</th><th>4kgの猫なら</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table></div>
+    <p class="small muted">獣医師向けの資料（MSD獣医マニュアル）で使われている目安の係数です。あくまでスタートの量なので、体重の変化を見ながら調整してください。</p>
+  </section>
+
+  <div class="tips">
+    <div class="tip"><b>月に1回、体重をはかる</b><p>同じ量で体重が増えていたら少し減らし、減っていたら少し増やします。1割くらいずつ動かすのが目安です。</p></div>
+    <div class="tip"><b>おやつもカロリーのうち</b><p>おやつをあげる日は、その分ごはんを少し減らします。おやつは1日のカロリーの1割までが目安です。</p></div>
+    <div class="tip"><b>袋の給与量ともくらべる</b><p>フードの袋に書かれた量と大きくちがうときは、袋の表示も参考にしてください。</p></div>
+    <div class="tip"><b>病気のときは獣医さんに</b><p>持病がある、ダイエット中、療法食を食べている猫は、量を獣医さんに決めてもらってください。</p></div>
+  </div>
+
+  <footer>
+    <p>この計算機の結果はおおよその目安です。猫の体調や体型によって必要な量は変わります。</p>
+    <p>このページには広告リンクが含まれます。</p>
+  </footer>
+</div>
+
+<script>
+/*
+  楽天市場へのリンク（A8.net →【楽天ツール】→【任意ページへのリンク作成】で作る）
+  q の検索URLをA8に貼ってリンクを作り、できたURL（https://rpx.a8.net/… ）を a8 にそのまま貼る。
+  a8 が空のものは、ふつうの楽天検索（報酬なし）になる。
+*/
+const SHOP=[
+ {label:'成猫用ドライフード', a8:'', q:'https://search.rakuten.co.jp/search/mall/%E3%82%AD%E3%83%A3%E3%83%83%E3%83%88%E3%83%95%E3%83%BC%E3%83%89+%E6%88%90%E7%8C%AB+%E3%83%89%E3%83%A9%E3%82%A4/'},
+ {label:'子猫用', a8:'', q:'https://search.rakuten.co.jp/search/mall/%E3%82%AD%E3%83%A3%E3%83%83%E3%83%88%E3%83%95%E3%83%BC%E3%83%89+%E5%AD%90%E7%8C%AB/'},
+ {label:'体重が気になる猫用', a8:'', q:'https://search.rakuten.co.jp/search/mall/%E3%82%AD%E3%83%A3%E3%83%83%E3%83%88%E3%83%95%E3%83%BC%E3%83%89+%E4%BD%93%E9%87%8D%E7%AE%A1%E7%90%86/'},
+ {label:'シニア猫用', a8:'', q:'https://search.rakuten.co.jp/search/mall/%E3%82%AD%E3%83%A3%E3%83%83%E3%83%88%E3%83%95%E3%83%BC%E3%83%89+%E3%82%B7%E3%83%8B%E3%82%A2/'},
+ {label:'キッチンスケール', a8:'', q:'https://search.rakuten.co.jp/search/mall/%E3%82%AD%E3%83%83%E3%83%81%E3%83%B3%E3%82%B9%E3%82%B1%E3%83%BC%E3%83%AB/'},
+];
+
+const STAGES=[['子猫（1歳まで）',2.5],['避妊・去勢済みの成猫',1.2],['避妊・去勢していない成猫',1.4],['太りやすい・あまり動かない',1.0]];
+const $=id=>document.getElementById(id);
+let factor=1.2, meals=2, touched=false;
+const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const rer=w=>70*Math.pow(w,0.75);
+
+$('tbody').innerHTML=STAGES.map(([n,f])=>`<tr><td>${n}</td><td class="num">× ${f.toFixed(1)}</td><td class="num">${fmt(rer(4)*f)} kcal</td></tr>`).join('');
+$('shopLinks').innerHTML=SHOP.map((s,i)=>`<a ${i===0?'class="primary"':''} href="${s.a8||s.q}" target="_blank" rel="nofollow sponsored noopener">${s.label}</a>`).join('');
+
+function food(k){
+  const kcal=parseFloat($('kcal'+k).value), bag=parseFloat($('bag'+k).value), price=parseFloat($('price'+k).value);
+  return {name:($('name'+k).value.trim()||(k==='A'?'フードA':'フードB')), kcal, bag, price, ok:kcal>0};
+}
+function calc(f,need){
+  const g=need/f.kcal*100;
+  const days=f.bag>0?f.bag/g:NaN;
+  const month=(f.bag>0&&f.price>=0)?f.price/f.bag*g*30.4:NaN;
+  return {g,days,month};
+}
+function drawCup(g){
+  // 計量カップ：めもり 0〜100g。1回分を塗る
+  const max=100, top=28, bottom=168, h=bottom-top;
+  const lvl=Math.min(g,max)/max;
+  const y=bottom-h*lvl;
+  let ticks='';
+  for(let v=0;v<=max;v+=10){const ty=bottom-h*v/max;const big=v%50===0;
+    ticks+=`<line x1="${big?118:124}" x2="132" y1="${ty}" y2="${ty}" stroke="var(--sub)" stroke-width="${big?1.6:1}"/>`;
+    if(v%20===0)ticks+=`<text x="140" y="${ty+4}" font-size="11" font-family="JetBrains Mono,monospace" fill="var(--sub)">${v}</text>`;}
+  const over=g>max?`<text x="70" y="20" text-anchor="middle" font-size="11" fill="var(--rose)" font-weight="700">100gをこえています</text>`:'';
+  $('cup').innerHTML=`
+    <defs><clipPath id="cupClip"><path d="M18 ${top} H122 L112 ${bottom} H28 Z"/></clipPath></defs>
+    <path d="M18 ${top} H122 L112 ${bottom} H28 Z" fill="var(--bg)" stroke="var(--line)" stroke-width="2"/>
+    <g clip-path="url(#cupClip)"><rect x="0" y="${y}" width="140" height="${bottom-y}" fill="var(--kibble)" opacity=".85"/>
+      ${Array.from({length:18},(_,i)=>`<circle cx="${26+(i*23)%90}" cy="${Math.min(bottom-6,y+8+((i*37)%Math.max(10,bottom-y)))}" r="5" fill="var(--kibble-ink)" opacity=".18"/>`).join('')}
+    </g>
+    <line x1="14" x2="126" y1="${y}" y2="${y}" stroke="var(--rose)" stroke-width="2" stroke-dasharray="4 3"/>
+    <text x="70" y="${Math.max(top+14,y-6)}" text-anchor="middle" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace" fill="var(--ink)">${fmt(g)}g</text>
+    ${ticks}${over}`;
+}
+function update(){
+  const w=parseFloat($('w').value);
+  const A=food('A'), B=food('B');
+  $('warn').hidden=true;
+  if(!(w>0)||!A.ok){$('warn').hidden=false;$('warn').textContent='体重と、フードAのカロリーを入れてください。';return}
+  const need=rer(w)*factor;
+  const a=calc(A,need);
+  $('mainName').textContent=A.name;$('cupName').textContent=A.name;
+  $('gDay').innerHTML=`${fmt(a.g)}<small>g</small>`;
+  $('gMeal').innerHTML=`${fmt(a.g/meals)}<small>g</small>`;
+  $('kcalDay').innerHTML=`${fmt(need)}<small>kcal</small>`;
+  $('days').innerHTML=isNaN(a.days)?'—':`${fmt(a.days)}<small>日</small>`;
+  $('month').innerHTML=isNaN(a.month)?'—':`${fmt(a.month)}<small>円</small>`;
+  drawCup(a.g/meals);
+  if(w>9||w<1)$('warn').hidden=false,$('warn').textContent=w<1?'とても小さい子猫は、1日に何回にも分けてあげます。量は獣医さんにも確認してください。':'体重が大きい場合、太りすぎのこともあります。ダイエットが必要かどうかは獣医さんに相談してください。';
+
+  // 比較
+  if(B.ok){
+    const b=calc(B,need);
+    const rows=[[A,a,'var(--green)'],[B,b,'var(--kibble)']];
+    const mx=Math.max(a.month||0,b.month||0)||1;
+    $('cmpRows').innerHTML=rows.map(([f,r,c])=>`<div class="cmp-row"><span>${f.name}</span><div class="bar"><i style="width:${isNaN(r.month)?0:r.month/mx*100}%;background:${c}"></i></div><span class="num">${isNaN(r.month)?'—':'月 '+fmt(r.month)+'円'}</span></div>
+      <div class="cmp-row small muted" style="margin-top:-6px"><span></span><span>1日 ${fmt(r.g)}g ・ 1袋 ${isNaN(r.days)?'—':fmt(r.days)+'日'}</span><span></span></div>`).join('');
+    if(!isNaN(a.month)&&!isNaN(b.month)){
+      const d=b.month-a.month;
+      $('cmpNote').textContent=Math.abs(d)<50?'1か月のフード代はほとんど同じです。'
+        :`${d>0?B.name:A.name}の方が、1か月に約${fmt(Math.abs(d))}円（1年で約${fmt(Math.abs(d)*12)}円）高くなります。カロリーが低いフードは食べる量が増えるので、袋の値段だけで比べると見誤りやすいです。`;
+      $('cmpNote').hidden=false;
+    }else $('cmpNote').hidden=true;
+    $('cmp').hidden=false;
+  }else $('cmp').hidden=true;
+  if(touched)$('exampleTag').hidden=true;
+}
+function seg(id,cb){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  $(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(+b.dataset.v);touched=true;update()})}
+seg('stage',v=>factor=v);seg('meals',v=>meals=v);
+$('wRange').addEventListener('input',()=>{$('w').value=$('wRange').value;touched=true;update()});
+$('w').addEventListener('input',()=>{if($('w').value!=='')$('wRange').value=$('w').value;touched=true;update()});
+document.querySelectorAll('.food input').forEach(el=>el.addEventListener('input',()=>{touched=true;update()}));
+update();
+</script>
+
+</body>
+</html>
