@@ -76,15 +76,18 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .cupwrap svg{width:170px;height:auto}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
 .stat{border-radius:12px;padding:10px 12px;background:var(--bg)}
-.stat span{display:block;font-size:12px;font-weight:700;color:var(--sub)}
+.stat>span{display:block;font-size:12px;font-weight:700;color:var(--sub)}
 .stat b{font:700 22px var(--f-num)}
 .stat b small{font-size:13px;font-weight:500;margin-left:2px}
 .stat.main{background:var(--green-soft);grid-column:1/-1}
 .stat.main b{font-size:32px;color:var(--green)}
 .cmp{display:flex;flex-direction:column;gap:10px}
-.cmp-row{display:grid;grid-template-columns:90px 1fr 110px;gap:10px;align-items:center;font-size:13.5px}
-.cmp-row .bar{height:22px;border-radius:6px;background:var(--bg);overflow:hidden}
-.cmp-row .bar i{display:block;height:100%;border-radius:6px;transition:width .3s ease}
+.cmp-item{display:flex;flex-direction:column;gap:4px}
+.cmp-head{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;font-weight:700}
+.cmp-head .nm{display:inline-flex;align-items:center;gap:6px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp-row{display:block}
+.cmp-row .bar,.cmp-item .bar{height:18px;border-radius:6px;background:var(--bg);overflow:hidden}
+.cmp-item .bar i{display:block;height:100%;border-radius:6px;transition:width .3s ease}
 .cmp-row .num{text-align:right;font-weight:700}
 .cmp-note{font-size:13.5px;padding:8px 12px;border-radius:10px;background:var(--kibble-soft)}
 .warn{font-size:13.5px;padding:8px 12px;border-radius:10px;background:var(--rose-soft)}
@@ -101,7 +104,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(-
 .formula span{padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
 .formula b{color:var(--green)}
 .formula i{font-style:normal;color:var(--sub);font-weight:800}
-table{border-collapse:collapse;width:100%;font-size:14px;min-width:380px}
+table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line)}
 th{font-size:12px;color:var(--sub)}
 td.num{font-family:var(--f-num)}
@@ -117,7 +120,6 @@ footer a{color:inherit}
   .grid2,.foods,.tips{grid-template-columns:1fr}
   .result{grid-template-columns:1fr;justify-items:center}
   .stats{width:100%}
-  .cmp-row{grid-template-columns:70px 1fr 92px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -198,7 +200,7 @@ footer a{color:inherit}
     </div>
     <div class="cmp" id="cmp">
       <h3 style="font-size:15px">1か月のフード代をくらべる</h3>
-      <div id="cmpRows"></div>
+      <div id="cmpRows" style="display:flex;flex-direction:column;gap:12px"></div>
       <p class="cmp-note" id="cmpNote"></p>
     </div>
     <p class="warn" id="warn" hidden></p>
@@ -287,7 +289,7 @@ function drawCup(g){
       ${Array.from({length:18},(_,i)=>`<circle cx="${26+(i*23)%90}" cy="${Math.min(bottom-6,y+8+((i*37)%Math.max(10,bottom-y)))}" r="5" fill="var(--kibble-ink)" opacity=".18"/>`).join('')}
     </g>
     <line x1="14" x2="126" y1="${y}" y2="${y}" stroke="var(--rose)" stroke-width="2" stroke-dasharray="4 3"/>
-    <text x="70" y="${Math.max(top+14,y-6)}" text-anchor="middle" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace" fill="var(--ink)">${fmt(g)}g</text>
+    <rect x="45" y="${Math.max(top+2,y-30)}" width="50" height="22" rx="6" fill="var(--paper)" stroke="var(--line)"/><text x="70" y="${Math.max(top+2,y-30)+16}" text-anchor="middle" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace" fill="var(--ink)">${fmt(g)}g</text>
     ${ticks}${over}`;
 }
 function update(){
@@ -311,8 +313,9 @@ function update(){
     const b=calc(B,need);
     const rows=[[A,a,'var(--green)'],[B,b,'var(--kibble)']];
     const mx=Math.max(a.month||0,b.month||0)||1;
-    $('cmpRows').innerHTML=rows.map(([f,r,c])=>`<div class="cmp-row"><span>${f.name}</span><div class="bar"><i style="width:${isNaN(r.month)?0:r.month/mx*100}%;background:${c}"></i></div><span class="num">${isNaN(r.month)?'—':'月 '+fmt(r.month)+'円'}</span></div>
-      <div class="cmp-row small muted" style="margin-top:-6px"><span></span><span>1日 ${fmt(r.g)}g ・ 1袋 ${isNaN(r.days)?'—':fmt(r.days)+'日'}</span><span></span></div>`).join('');
+    $('cmpRows').innerHTML=rows.map(([f,r,c])=>`<div class="cmp-item"><div class="cmp-head"><span class="nm"><i class="dot" style="background:${c}"></i>${f.name}</span><span class="num">${isNaN(r.month)?'—':'月 '+fmt(r.month)+'円'}</span></div>
+      <div class="bar"><i style="width:${isNaN(r.month)?0:r.month/mx*100}%;background:${c}"></i></div>
+      <span class="small muted">1日 ${fmt(r.g)}g ・ 1袋 ${isNaN(r.days)?'—':fmt(r.days)+'日'}</span></div>`).join('');
     if(!isNaN(a.month)&&!isNaN(b.month)){
       const d=b.month-a.month;
       $('cmpNote').textContent=Math.abs(d)<50?'1か月のフード代はほとんど同じです。'
