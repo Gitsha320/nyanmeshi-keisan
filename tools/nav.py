@@ -5,7 +5,7 @@
 import os, re, datetime
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'public')
-SITE = 'https://nyanmeshi-keisan.pages.dev'
+SITE = 'https://nekomawari.com'
 PAGES = [
   ('/', 'ごはんの量', '--green'),
   ('/kirikae/', 'フード切り替え', '--kibble'),

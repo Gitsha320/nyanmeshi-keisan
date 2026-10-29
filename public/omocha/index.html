@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>猫のおもちゃ口コミ｜どんな猫がどれくらい遊んだ？ 飽きるまでの日数も - にゃん飯計算機</title>
+<title>猫のおもちゃ口コミ｜どんな猫がどれくらい遊んだ？ 飽きるまでの日数も - ねこまわり</title>
 <meta name="description" content="猫じゃらし・電動おもちゃ・けりぐるみ・トンネルなど、人気の猫のおもちゃを、飼い主の口コミでくらべられます。子猫・シニア・活発・怖がりなど、うちの子に近い猫の「遊んだ度」と「何日で飽きたか」がわかります。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="猫のおもちゃ口コミ｜にゃん飯計算機">
+<meta property="og:title" content="猫のおもちゃ口コミ｜ねこまわり">
 <meta property="og:description" content="どんな猫が、どれくらい遊んだ？ 飽きるまでの日数も。">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#2f6f62">
-<link rel="canonical" href="https://nyanmeshi-keisan.pages.dev/omocha/">
+<link rel="canonical" href="https://nekomawari.com/omocha/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
 <link rel="stylesheet" href="/style.css">
@@ -69,8 +69,9 @@
 <body>
 <div class="wrap">
   <header class="brand">
-    <a class="mark" href="/" aria-label="にゃん飯計算機のトップへ"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7.5 9.5 9 4.5l4 5zM24.5 9.5 23 4.5l-4 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 10h19l-2 15.2a2 2 0 0 1-2 1.8h-11a2 2 0 0 1-2-1.8z" fill="currentColor"/><path d="M11 15h4.5M11 19h6.5M11 23h4.5" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></svg></a>
+    <a class="mark" href="/" aria-label="ねこまわりのトップへ"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7.5 9.5 9 4.5l4 5zM24.5 9.5 23 4.5l-4 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 10h19l-2 15.2a2 2 0 0 1-2 1.8h-11a2 2 0 0 1-2-1.8z" fill="currentColor"/><path d="M11 15h4.5M11 19h6.5M11 23h4.5" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></svg></a>
     <div>
+      <a class="site" href="/">ねこまわり</a>
       <h1>猫のおもちゃ口コミ</h1>
       <p class="small muted">どんな猫が、どれくらい遊んだ？ 何日で飽きた？</p>
     </div>
@@ -201,7 +202,7 @@ async function report(b){
   try{await fetch('/api/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:+b.dataset.id})});b.textContent='通報しました';b.dataset.done=1}catch(e){}
 }
 async function loadSummary(){try{SUM=(await (await fetch('/api/reviews')).json()).summary||{}}catch(e){SUM={}}}
-$('prnote').textContent='楽天市場・Amazonのリンクは広告です。Amazonのアソシエイトとして、にゃん飯計算機は適格販売により収入を得ています。';
+$('prnote').textContent='楽天市場・Amazonのリンクは広告です。Amazonのアソシエイトとして、ねこまわりは適格販売により収入を得ています。';
 (async()=>{await loadSummary();render();
   const h=location.hash.slice(1);if(h&&TOYS.some(t=>t.id===h)){openId=h;render();$('t-'+h).scrollIntoView({block:'start'})}})();
 </script>

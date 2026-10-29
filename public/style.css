@@ -169,3 +169,4 @@ footer a{color:inherit}
 .pc-row .nm i{width:10px;height:10px;border-radius:50%;flex:none}
 .pc-row b{font:700 16px var(--f-num)}
 .pc-row small{color:var(--sub);font-size:11.5px}
+.site{display:inline-block;font-size:12px;font-weight:800;color:var(--green);text-decoration:none;letter-spacing:.12em;margin-bottom:-2px}

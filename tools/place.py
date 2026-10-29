@@ -1,6 +1,6 @@
 """
 楽天（A8.net）とAmazonの商品カードを index.html に差しこむ。
-- 楽天のリンクは tools/rakuten_items.json（A8の管理画面で「にゃん飯計算機」用に作ったコードを1文字も変えずに保存）
+- 楽天のリンクは tools/rakuten_items.json（A8の管理画面で「にゃん飯計算機（ねこまわり）」用に作ったコードを1文字も変えずに保存）
 - Amazonは https://www.amazon.co.jp/dp/ASIN?tag=トラッキングID の形
 - AMAZON_ON を True にするのは、Amazonアソシエイトの「ウェブサイトとモバイルアプリ」にこのサイトを登録してから
 - <!--pr:名前--> … <!--/pr:名前--> の目印で囲むので、何度実行しても同じ結果になる
@@ -85,7 +85,7 @@ def clean(s):
 def main():
     s = clean(open(IDX, encoding='utf-8').read())
     px = ITEMS[FOOD[0][0]]['px']
-    note = '<p class="pr-note">楽天市場の価格は確認した日のものです。' + ('Amazonのアソシエイトとして、にゃん飯計算機は適格販売により収入を得ています。' if AMAZON_ON else '') + '</p>'
+    note = '<p class="pr-note">楽天市場の価格は確認した日のものです。' + ('Amazonのアソシエイトとして、ねこまわりは適格販売により収入を得ています。' if AMAZON_ON else '') + '</p>'
     # 1) 結果の下：フード
     food = (f'<!--pr:food--><p class="small muted" style="margin:0">計算した量に合うフードを探すなら</p>' + group('フード', '--green', FOOD) +
             f'<img border="0" width="1" height="1" src="{html.escape(px)}" alt="" class="px"><p class="small muted" style="margin:4px 0 0">ほかのフードを探す</p><!--/pr:food-->')

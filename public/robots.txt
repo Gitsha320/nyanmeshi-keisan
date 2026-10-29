@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /kanri/
 
-Sitemap: https://nyanmeshi-keisan.pages.dev/sitemap.xml
+Sitemap: https://nekomawari.com/sitemap.xml
