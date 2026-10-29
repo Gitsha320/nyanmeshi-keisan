@@ -7,7 +7,7 @@
 """
 import json, os, re, html
 
-AMAZON_ON = False
+AMAZON_ON = True
 AMAZON_TAG = 'gligla-22'
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
