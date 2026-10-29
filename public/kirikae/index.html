@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>猫のフード切り替え表｜混ぜる割合と量を日ごとに計算・印刷 - にゃん飯計算機</title>
+<meta name="description" content="いまのキャットフードから新しいフードへ、7日〜14日かけて切り替えるときの混ぜる割合と、1日に何グラムずつあげるかを日ごとに計算します。ロイヤルカナン・ヒルズ・ピュリナワンなど人気フードは一覧から選べて、印刷もできます。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="猫のフード切り替え表｜にゃん飯計算機">
+<meta property="og:description" content="混ぜる割合と量を日ごとに計算。印刷して冷蔵庫に貼れます。">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2f6f62">
+<link rel="canonical" href="https://nyanmeshi-keisan.pages.dev/kirikae/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<script src="/foods.js"></script>
+<style>
+.pick{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+.pick .arrow{display:grid;place-items:center;font-size:22px;color:var(--sub);font-weight:800}
+.fd{border-radius:14px;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:8px}
+.fd .hd{display:flex;align-items:center;gap:8px;font-weight:800;font-size:14px}
+.fd .pair{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}
+.fd .box{background:var(--paper)}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sched{display:flex;flex-direction:column;gap:6px}
+.day{display:grid;grid-template-columns:76px 1fr 150px;gap:10px;align-items:center;font-size:13.5px}
+.day .d b{display:block;font-size:14px}
+.day .d small{color:var(--sub);font-size:11.5px;white-space:nowrap}
+.mix{display:flex;height:30px;border-radius:8px;overflow:hidden;background:var(--bg)}
+.mix i{display:flex;align-items:center;justify-content:center;font:700 12px var(--f-num);color:#fff;font-style:normal;white-space:nowrap;overflow:hidden}
+.mix .o{background:var(--green)}
+.mix .n{background:var(--kibble);color:var(--kibble-ink)}
+.g{font:700 13px var(--f-num);text-align:right;line-height:1.45}
+.g span{display:block}
+.g .go{color:var(--green)} .g .gn{color:var(--kibble)}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--sub);flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.printbtn{appearance:none;border:0;border-radius:12px;background:var(--green);color:var(--on-green);font:800 15px var(--f-body);padding:12px 18px;cursor:pointer;align-self:flex-start}
+.ptable{display:none}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.step{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:4px}
+.step b{font-size:14.5px}
+.step p{font-size:13.5px;color:var(--sub)}
+.step .n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:800 13px var(--f-num);color:#fff}
+@media (max-width:640px){
+  .pick{grid-template-columns:1fr}.pick .arrow{transform:rotate(90deg);height:20px}
+  .sum{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr}
+  .day{grid-template-columns:58px 1fr 112px;gap:8px}
+}
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff;padding:0;font-size:12px}
+  .gnav,.noprint,aside.pr,footer,.steps,.brand p{display:none!important}
+  .card{border:0;padding:0}
+  .ptable{display:table;width:100%;border-collapse:collapse;margin-top:8px}
+  .ptable th,.ptable td{border:1px solid #999;padding:6px;font-size:12px}
+  .ptable td.c{width:52px}
+  .sched{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <a class="mark" href="/" aria-label="にゃん飯計算機のトップへ"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7.5 9.5 9 4.5l4 5zM24.5 9.5 23 4.5l-4 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 10h19l-2 15.2a2 2 0 0 1-2 1.8h-11a2 2 0 0 1-2-1.8z" fill="currentColor"/><path d="M11 15h4.5M11 19h6.5M11 23h4.5" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></svg></a>
+    <div>
+      <h1>フード切り替え表</h1>
+      <p class="small muted">いまのフードから新しいフードへ。混ぜる割合と量を日ごとに出します</p>
+    </div>
+  </header>
+  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/" aria-current="page"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
+
+  <section class="card noprint" aria-label="猫のこと">
+    <div class="grid2">
+      <div class="field">
+        <label for="w">体重</label>
+        <div class="row"><input type="range" id="wRange" min="0.5" max="9" step="0.1" value="4" aria-label="体重スライダー"><div class="box"><input id="w" type="number" inputmode="decimal" min="0.3" max="15" step="0.1" value="4"><span>kg</span></div></div>
+      </div>
+      <div class="field">
+        <span class="lbl">ごはんの回数</span>
+        <div class="seg" id="meals">
+          <button type="button" data-v="1" aria-pressed="false">1回</button>
+          <button type="button" data-v="2" aria-pressed="true">2回</button>
+          <button type="button" data-v="3" aria-pressed="false">3回</button>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <span class="lbl">いまの状態</span>
+      <div class="seg" id="stage">
+        <button type="button" data-v="2.5" aria-pressed="false">子猫（1歳まで）</button>
+        <button type="button" data-v="1.2" aria-pressed="true">避妊・去勢済みの成猫</button>
+        <button type="button" data-v="1.4" aria-pressed="false">避妊・去勢していない成猫</button>
+        <button type="button" data-v="1.0" aria-pressed="false">太りやすい・あまり動かない</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card noprint" aria-label="フード">
+    <h2>どのフードから、どのフードへ？</h2>
+    <div class="pick">
+      <div class="fd">
+        <span class="hd"><i class="dot" style="background:var(--green)"></i>いまのフード</span>
+        <select class="fsel" id="selO" aria-label="いまのフードを選ぶ"></select>
+        <div class="pair"><span>カロリー（100gあたり）</span><div class="box"><input id="kO" type="number" inputmode="decimal" value="374"><span>kcal</span></div></div>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="fd">
+        <span class="hd"><i class="dot" style="background:var(--kibble)"></i>新しいフード</span>
+        <select class="fsel" id="selN" aria-label="新しいフードを選ぶ"></select>
+        <div class="pair"><span>カロリー（100gあたり）</span><div class="box"><input id="kN" type="number" inputmode="decimal" value="332"><span>kcal</span></div></div>
+      </div>
+    </div>
+    <div class="field">
+      <span class="lbl">何日かけて切り替える？</span>
+      <div class="seg" id="len">
+        <button type="button" data-v="7" aria-pressed="true">7日（ふつう）</button>
+        <button type="button" data-v="14" aria-pressed="false">14日（お腹が弱い・こだわりが強い）</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="start">はじめる日</label>
+      <input id="start" type="date" class="fsel" style="max-width:220px">
+    </div>
+    <p class="src">一覧のカロリーは各メーカーの公式ページで確かめた値です（<span id="chk"></span>時点）。一覧にないフードは「その他」を選んで袋のカロリーを入れてください。</p>
+  </section>
+
+  <section class="card" aria-live="polite" aria-label="切り替え表">
+    <h2 id="ttl">切り替え表</h2>
+    <div class="sum noprint">
+      <div class="stat"><span>1日に必要なカロリー</span><b class="num" id="need">—</b></div>
+      <div class="stat"><span>いまのフードだけなら</span><b class="num" id="gO">—</b></div>
+      <div class="stat"><span>新しいフードだけなら</span><b class="num" id="gN">—</b></div>
+    </div>
+    <p class="cmp-note noprint" id="note" hidden></p>
+    <div class="legend"><span><i class="dot" style="background:var(--green)"></i><span id="lgO">いまのフード</span></span><span><i class="dot" style="background:var(--kibble)"></i><span id="lgN">新しいフード</span></span><span class="small">右の数字は1日の量（<span id="perMeal">2回に分けてあげます</span>）</span></div>
+    <div class="sched" id="sched"></div>
+    <table class="ptable" id="ptable"></table>
+    <button type="button" class="printbtn noprint" onclick="window.print()">この表を印刷する</button>
+  </section>
+
+  <div class="steps">
+    <div class="step"><span class="n" style="background:var(--green)">1</span><b>少しずつ混ぜる</b><p>最初は新しいフードを1割くらいから。お腹の様子を見ながら増やします。</p></div>
+    <div class="step"><span class="n" style="background:var(--kibble)">2</span><b>ゆるくなったら一歩もどす</b><p>便がゆるいときは、問題がなかった前の割合に1〜2日とどまってから進めます。</p></div>
+    <div class="step"><span class="n" style="background:var(--rose)">3</span><b>食べないときは並べて出す</b><p>混ぜると食べない猫は、別のお皿に並べて選ばせる方法もあります。</p></div>
+  </div>
+  <p class="small muted">進め方は、タフツ大学獣医学部の栄養学チームの解説（<a href="https://sites.tufts.edu/petfoodology/?p=9726" target="_blank" rel="noopener">How do I switch my pet's food?</a>）をもとにしています。吐く・水のような下痢が続く・元気がない・まる1日以上ほとんど食べないときは、切り替えを止めて獣医さんに相談してください。</p>
+
+  <aside class="pr" aria-label="広告"><!--pr:kfood--><p class="pr-h"><span class="pr-tag">PR</span>切り替えるフードを探すなら</p><div class="grp"><p class="gt"><i style="background:var(--green)"></i>フード</p><div class="items"><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u8bu4.2bo11f3d.g00u8bu4.2bo12343%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftamaone%252Ftac0100270-2500g%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftamaone%252Fi%252F10000183%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/tamaone/cabinet/imgrc0117123806.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u8bu4.2bo11f3d.g00u8bu4.2bo12343%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftamaone%252Ftac0100270-2500g%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftamaone%252Fi%252F10000183%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">tama ボナペティ ラム＆フィッシュ</a><span class="nt">グレインフリーのドライフード。600g・1.5kg・2.5kgから選べます</span><span class="pc">楽天市場：1,540円〜<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u8bu4.2bo11f3d.g00u8bu4.2bo12343%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftamaone%252Ftac0100270-2500g%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftamaone%252Fi%252F10000183%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B0DT44V818?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qufs4.2bo115b9.g00qufs4.2bo12f75%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252F1096dog%252Fw-105158-00-00%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F1096dog%252Fi%252F10101086%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/1096dog/cabinet/royalcanin_t/royalcanintrial/tokuten/w-105158-00-00.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qufs4.2bo115b9.g00qufs4.2bo12f75%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252F1096dog%252Fw-105158-00-00%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F1096dog%252Fi%252F10101086%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">ロイヤルカナン キトン 2kg</a><span class="nt">成長後期の子猫用（生後12か月まで）</span><span class="pc">楽天市場：3,929円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qufs4.2bo115b9.g00qufs4.2bo12f75%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252F1096dog%252Fw-105158-00-00%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F1096dog%252Fi%252F10101086%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B000OLFXRU?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u6974.2bo11a13.g00u6974.2bo12689%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fnatural-link9%252F2842-001888%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fnatural-link9%252Fi%252F10000856%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/natural-link9/cabinet/amayahoo/imgrc0108012207.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u6974.2bo11a13.g00u6974.2bo12689%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fnatural-link9%252F2842-001888%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fnatural-link9%252Fi%252F10000856%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">ヒルズ サイエンス・ダイエット 避妊・去勢後</a><span class="nt">避妊・去勢後の猫用のドライフード</span><span class="pc">楽天市場：6,240円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u6974.2bo11a13.g00u6974.2bo12689%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fnatural-link9%252F2842-001888%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fnatural-link9%252Fi%252F10000856%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B00O8IE2UO?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u0or4.2bo11fb8.g00u0or4.2bo12c22%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fppp-shop%252F10d1kv2kgb%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fppp-shop%252Fi%252F10010432%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/ppp-shop/cabinet/aaapic/systempic005/10d1kv2kgb1.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u0or4.2bo11fb8.g00u0or4.2bo12c22%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fppp-shop%252F10d1kv2kgb%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fppp-shop%252Fi%252F10010432%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">ロイヤルカナン ライトウェイトケア</a><span class="nt">減量したい成猫用（生後12か月以上）</span><span class="pc">楽天市場：5,740円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u0or4.2bo11fb8.g00u0or4.2bo12c22%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fppp-shop%252F10d1kv2kgb%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fppp-shop%252Fi%252F10010432%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B0D1KV2KGB?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div></div></div><div class="grp"><p class="gt"><i style="background:var(--kibble)"></i>切り替え中にあると便利</p><div class="items"><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4904785191501%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11276123%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/501/4904785191501.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4904785191501%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11276123%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">タニタ クッキングスケール KJ-222</a><span class="nt">0.1g単位ではかれる。1回分の量をはかるのに</span><span class="pc">楽天市場：3,390円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4904785191501%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11276123%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B0DBL3R6Y3?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00rrql4.2bo11af7.g00rrql4.2bo124be%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkaguzaku%252Fyj-5613%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkaguzaku%252Fi%252F10007763%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/kaguzaku/cabinet/01023319k/04410742k/07432811/yj-5613_sam01k.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00rrql4.2bo11af7.g00rrql4.2bo124be%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkaguzaku%252Fyj-5613%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkaguzaku%252Fi%252F10007763%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">山崎実業 密閉袋ごとペットフードストッカー 3kg</a><span class="nt">袋のまま入れて密閉できる。計量カップつき</span><span class="pc">楽天市場：3,850円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00rrql4.2bo11af7.g00rrql4.2bo124be%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkaguzaku%252Fyj-5613%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkaguzaku%252Fi%252F10007763%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B09LY2RQV8?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div></div></div><img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=4BE9CS+98TDHE+2HOM+BWGDT" alt="" class="px"><p class="pr-note">楽天市場の価格は確認した日のものです。Amazonのアソシエイトとして、にゃん飯計算機は適格販売により収入を得ています。</p><!--/pr:kfood--></aside>
+
+  <footer>
+    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
+    <p>この表はおおよその目安です。猫の体調や体型によって必要な量は変わります。</p>
+    <p>このページには広告リンクが含まれます。</p>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const rer=w=>70*Math.pow(w,0.75);
+let factor=1.2, meals=2, len=7;
+// 7日：タフツ大学の表（新しいフードの割合）。14日は各段階を2日ずつ
+const PLAN={7:[10,25,50,50,75,90,100],14:[10,10,25,25,50,50,50,50,75,75,90,90,100,100]};
+let nameO='いまのフード', nameN='新しいフード';
+
+fillFoodSelect($('selO'),'いまのフードを一覧から選ぶ');
+fillFoodSelect($('selN'),'新しいフードを一覧から選ぶ');
+$('chk').textContent=FOODS_CHECKED;
+// 初期値：ロイヤルカナン インドア → tama ボナペティ
+const iO=FOODS.findIndex(f=>f.n.startsWith('インドア（')), iN=FOODS.findIndex(f=>f.b==='tama');
+$('selO').value=iO; $('selN').value=iN; nameO=FOODS[iO].b+' '+FOODS[iO].n; nameN=FOODS[iN].b+' '+FOODS[iN].n;
+[['O','selO','kO'],['N','selN','kN']].forEach(([k,s,i])=>{
+  $(s).addEventListener('change',()=>{const v=$(s).value;
+    if(v===''||v==='other'){ if(k==='O')nameO='いまのフード'; else nameN='新しいフード'; if(v==='other')$(i).focus(); update(); return; }
+    const f=FOODS[+v]; $(i).value=f.k; if(k==='O')nameO=f.b+' '+f.n; else nameN=f.b+' '+f.n; update();});
+  $(i).addEventListener('input',()=>{$(s).value='other'; if(k==='O')nameO='いまのフード'; else nameN='新しいフード'; update();});
+});
+const today=new Date(); $('start').value=today.toISOString().slice(0,10);
+$('start').addEventListener('input',update);
+
+function md(d){return (d.getMonth()+1)+'/'+d.getDate()+'('+'日月火水木金土'[d.getDay()]+')'}
+function update(){
+  const w=parseFloat($('w').value), kO=parseFloat($('kO').value), kN=parseFloat($('kN').value);
+  if(!(w>0&&kO>0&&kN>0)){$('sched').innerHTML='<p class="warn">体重と、2つのフードのカロリーを入れてください。</p>';return}
+  const need=rer(w)*factor;
+  $('need').innerHTML=fmt(need)+'<small>kcal</small>';
+  $('gO').innerHTML=fmt(need/kO*100)+'<small>g/日</small>';
+  $('gN').innerHTML=fmt(need/kN*100)+'<small>g/日</small>';
+  const diff=need/kN*100-need/kO*100;
+  $('note').hidden=Math.abs(diff)<2;
+  $('note').textContent=`新しいフードはカロリーが${kN<kO?'低い':'高い'}ので、切り替えが終わったら1日の量が約${fmt(Math.abs(diff))}g ${diff>0?'増え':'減り'}ます。同じカップ1杯のままだと${diff>0?'足りなく':'多すぎに'}なるので気をつけてください。`;
+  $('lgO').textContent=nameO; $('lgN').textContent=nameN;
+  $('perMeal').textContent=meals===1?'1回であげます':meals+'回に分けてあげます';
+  $('ttl').textContent=`${len}日間の切り替え表`;
+  const st=new Date($('start').value||today);
+  const rows=PLAN[len].map((p,i)=>{const d=new Date(st);d.setDate(st.getDate()+i);
+    const go=need*(100-p)/100/kO*100, gn=need*p/100/kN*100; return {i,d,p,go,gn};});
+  $('sched').innerHTML=rows.map(r=>`<div class="day"><span class="d"><b>${r.i+1}日目</b><small>${md(r.d)}</small></span>
+    <div class="mix" role="img" aria-label="いまのフード${100-r.p}%、新しいフード${r.p}%">${r.p<100?`<i class="o" style="width:${100-r.p}%">${100-r.p>=20?(100-r.p)+'%':''}</i>`:''}<i class="n" style="width:${r.p}%">${r.p>=20?r.p+'%':''}</i></div>
+    <span class="g">${r.p<100?`<span class="go">${fmt(r.go)}g</span>`:''}<span class="gn">${fmt(r.gn)}g</span></span></div>`).join('');
+  $('ptable').innerHTML=`<thead><tr><th>日</th><th>${nameO}</th><th>${nameN}</th><th>1回分（${meals}回）</th><th class="c">食べた</th><th class="c">便OK</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${r.i+1}日目 ${md(r.d)}</td><td>${r.p<100?fmt(r.go)+'g（'+(100-r.p)+'%）':'—'}</td><td>${fmt(r.gn)}g（${r.p}%）</td><td>${r.p<100?fmt(r.go/meals)+'g ＋ ':''}${fmt(r.gn/meals)}g</td><td class="c"></td><td class="c"></td></tr>`).join('')+'</tbody>';
+}
+function seg(id,cb){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  $(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(+b.dataset.v);update()})}
+seg('stage',v=>factor=v);seg('meals',v=>meals=v);seg('len',v=>len=v);
+$('wRange').addEventListener('input',()=>{$('w').value=$('wRange').value;update()});
+$('w').addEventListener('input',()=>{if($('w').value!=='')$('wRange').value=$('w').value;update()});
+update();
+</script>
+</body>
+</html>

@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /kanri/
+
+Sitemap: https://nyanmeshi-keisan.pages.dev/sitemap.xml

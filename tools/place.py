@@ -84,7 +84,6 @@ def clean(s):
 
 def main():
     s = clean(open(IDX, encoding='utf-8').read())
-    s = s.replace('</style>', CSS + '</style>', 1)
     px = ITEMS[FOOD[0][0]]['px']
     note = '<p class="pr-note">楽天市場の価格は確認した日のものです。' + ('Amazonのアソシエイトとして、にゃん飯計算機は適格販売により収入を得ています。' if AMAZON_ON else '') + '</p>'
     # 1) 結果の下：フード
@@ -101,6 +100,35 @@ def main():
     assert b in s
     s = s.replace(b, tools + '\n\n' + b, 1)
     open(IDX, 'w', encoding='utf-8').write(s)
+    # 3) ほかのページ：<!--pr:名前-->…<!--/pr:名前--> の中身だけ入れ直す（目印は残す）
+    PUB = os.path.join(ROOT, 'public')
+    def fill(rel, key, inner):
+        f = os.path.join(PUB, rel)
+        if not os.path.exists(f):
+            return
+        t = open(f, encoding='utf-8').read()
+        t, n = re.subn(rf'<!--pr:{key}-->.*?<!--/pr:{key}-->', lambda m: f'<!--pr:{key}-->{inner}<!--/pr:{key}-->', t, flags=re.S)
+        assert n == 1, (rel, key)
+        open(f, 'w', encoding='utf-8').write(t)
+        print('fill', rel, key)
+    pxi = f'<img border="0" width="1" height="1" src="{html.escape(px)}" alt="" class="px">'
+    fill('kirikae/index.html', 'kfood',
+         '<p class="pr-h"><span class="pr-tag">PR</span>切り替えるフードを探すなら</p>' + group('フード', '--green', FOOD) +
+         group('切り替え中にあると便利', '--kibble', [TOOLS[0], TOOLS[1]]) + pxi + note)
+    fill('okane/index.html', 'okane',
+         '<p class="pr-h"><span class="pr-tag">PR</span>毎月のお金をおさえるなら</p>' + group('まとめ買いしやすいもの', '--kibble', [FOOD[0], EXTRA[0]]) +
+         group('長く使えるもの', '--green', [TOOLS[1], TOOLS[3]]) + pxi + note)
+    # 4) おもちゃ口コミ：ページのJSに楽天リンクを入れる
+    of = os.path.join(PUB, 'omocha/index.html')
+    if os.path.exists(of):
+        t = open(of, encoding='utf-8').read()
+        ids = re.findall(r"\br:'([a-z0-9-]+:[0-9]+)'", t)
+        data = {i: {'url': ITEMS[i]['url'], 'img': ITEMS[i]['img']} for i in ids}
+        t = re.sub(r'/\*ritems\*/.*?/\*/ritems\*/', lambda m: '/*ritems*/' + json.dumps(data, ensure_ascii=False) + '/*/ritems*/', t, flags=re.S)
+        if '<!--pxi-->' not in t:
+            t = t.replace('  <footer>', f'  <!--pxi-->{pxi}<!--/pxi-->\n  <footer>', 1)
+        open(of, 'w', encoding='utf-8').write(t)
+        print('fill omocha', len(data))
     print('ok amazon=', AMAZON_ON)
 
 if __name__ == '__main__':

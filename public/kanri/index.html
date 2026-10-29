@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>口コミの管理 - にゃん飯計算機</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/style.css">
+<style>
+.rv{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.rv.hid{border-color:var(--rose);background:var(--rose-soft)}
+.rv .m{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--sub)}
+.rv .b{display:flex;gap:6px}
+.rv button,.go{appearance:none;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font:700 12.5px var(--f-body);border-radius:8px;padding:4px 10px;cursor:pointer}
+.rv button.del{border-color:var(--rose);color:var(--rose)}
+#tk{border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:600 14px var(--f-num);width:100%;max-width:360px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>口コミの管理</h1>
+  <p class="small muted">管理用の合言葉を入れると、通報された口コミや最近の口コミが見られます。合言葉はこのタブを閉じると消えます。</p>
+  <div class="row"><input id="tk" type="password" placeholder="管理用の合言葉" autocomplete="off"><button class="go" id="go">見る</button></div>
+  <p id="msg" class="small"></p>
+  <div id="list" style="display:flex;flex-direction:column;gap:8px"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+try{$('tk').value=sessionStorage.getItem('nyan-admin')||''}catch(e){}
+async function load(){
+  const t=$('tk').value.trim();try{sessionStorage.setItem('nyan-admin',t)}catch(e){}
+  const r=await fetch('/api/admin',{headers:{'x-admin-token':t}});
+  if(r.status===401){$('msg').textContent='合言葉がちがいます';$('list').innerHTML='';return}
+  const d=await r.json();const rows=d.reviews||[];
+  $('msg').textContent=`${rows.length}件（通報あり・非表示を先に表示）`;
+  $('list').innerHTML=rows.map(x=>`<div class="rv ${x.hidden?'hid':''}"><div class="m"><b>#${x.id}</b><span>${esc(x.toy)}</span><span>★${x.stars}</span><span>${esc(x.age)}</span><span>${esc(x.traits)}</span><span>${esc(x.days)}</span><span>通報 ${x.reports}</span><span>${x.hidden?'非表示中':'表示中'}</span><span>${new Date(x.created_at).toLocaleString('ja-JP')}</span></div>
+    <div>${esc(x.comment||'（コメントなし）')}</div>
+    <div class="b">${x.hidden?`<button data-a="show" data-id="${x.id}">表示にもどす</button>`:`<button data-a="hide" data-id="${x.id}">非表示にする</button>`}<button class="del" data-a="delete" data-id="${x.id}">削除</button></div></div>`).join('');
+}
+$('go').addEventListener('click',load);
+$('list').addEventListener('click',async e=>{const b=e.target.closest('button[data-a]');if(!b)return;
+  if(b.dataset.a==='delete'&&!confirm('削除すると元にもどせません。削除しますか？'))return;
+  await fetch('/api/admin',{method:'POST',headers:{'content-type':'application/json','x-admin-token':$('tk').value.trim()},body:JSON.stringify({id:+b.dataset.id,action:b.dataset.a})});load();});
+if($('tk').value)load();
+</script>
+</body>
+</html>

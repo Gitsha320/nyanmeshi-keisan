@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>猫のおもちゃ口コミ｜どんな猫がどれくらい遊んだ？ 飽きるまでの日数も - にゃん飯計算機</title>
+<meta name="description" content="猫じゃらし・電動おもちゃ・けりぐるみ・トンネルなど、人気の猫のおもちゃを、飼い主の口コミでくらべられます。子猫・シニア・活発・怖がりなど、うちの子に近い猫の「遊んだ度」と「何日で飽きたか」がわかります。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="猫のおもちゃ口コミ｜にゃん飯計算機">
+<meta property="og:description" content="どんな猫が、どれくらい遊んだ？ 飽きるまでの日数も。">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2f6f62">
+<link rel="canonical" href="https://nyanmeshi-keisan.pages.dev/omocha/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<style>
+.filters{display:flex;flex-direction:column;gap:10px}
+.filters .lbl{font-weight:800;font-size:13px;color:var(--sub)}
+.sortrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.toylist{display:flex;flex-direction:column;gap:12px}
+.toy{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.toy .top{display:grid;grid-template-columns:96px 1fr;gap:14px}
+.toy .ph{width:96px;height:96px;border-radius:12px;background:#fff;object-fit:contain;border:1px solid var(--line)}
+.toy .tp{display:inline-block;font-size:11.5px;font-weight:800;border-radius:6px;padding:1px 8px;margin-bottom:2px}
+.toy h3{font-size:16px}
+.toy .ds{font-size:13px;color:var(--sub);line-height:1.6}
+.score{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stars{font-size:18px;letter-spacing:1px;color:var(--kibble);white-space:nowrap}
+.stars .off{color:var(--line)}
+.score .avg{font:700 18px var(--f-num)}
+.score .cnt{font-size:12.5px;color:var(--sub)}
+.days{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--bg);margin-top:2px}
+.days i{display:block;height:100%}
+.dleg{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11.5px;color:var(--sub)}
+.dleg span{display:inline-flex;align-items:center;gap:4px}
+.dleg i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.acts a{font-weight:800;font-size:12.5px;text-decoration:none;border-radius:999px;padding:6px 12px;color:#fff}
+.acts .b-rak{background:#bf0000}.acts .b-amz{background:#232f3e}
+.open{appearance:none;border:1.5px solid var(--green);background:var(--green-soft);color:var(--green);font:800 13px var(--f-body);border-radius:999px;padding:6px 14px;cursor:pointer;margin-left:auto}
+.panel{border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:12px}
+.rv{background:var(--bg);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.rv .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
+.chip{display:inline-block;border-radius:999px;padding:1px 9px;font-weight:700;font-size:11.5px;background:var(--paper);border:1px solid var(--line)}
+.rv p{font-size:14px}
+.rv .rep{appearance:none;border:0;background:none;color:var(--sub);font:500 11.5px var(--f-body);cursor:pointer;margin-left:auto;text-decoration:underline}
+.form{border:2px solid var(--green-soft);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.form h4{margin:0;font-size:14.5px}
+.starin{display:flex;gap:4px}
+.starin button{appearance:none;border:0;background:none;font-size:30px;line-height:1;color:var(--line);cursor:pointer;padding:0 2px}
+.starin button.on{color:var(--kibble)}
+.form textarea{width:100%;min-height:72px;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:500 14px var(--f-body);color:var(--ink);background:var(--paper);resize:vertical}
+.form textarea:focus{outline:none;border-color:var(--green)}
+.send{appearance:none;border:0;border-radius:12px;background:var(--green);color:var(--on-green);font:800 14.5px var(--f-body);padding:10px 18px;cursor:pointer;align-self:flex-start}
+.send:disabled{opacity:.5;cursor:default}
+.msg{font-size:13px;border-radius:10px;padding:6px 10px}
+.msg.ok{background:var(--green-soft)}.msg.ng{background:var(--rose-soft)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.empty{font-size:13.5px;color:var(--sub)}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.how div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px;color:var(--sub)}
+.how b{display:block;color:var(--ink);font-size:14px}
+@media (max-width:640px){.toy .top{grid-template-columns:72px 1fr}.toy .ph{width:72px;height:72px}.how{grid-template-columns:1fr}.open{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <a class="mark" href="/" aria-label="にゃん飯計算機のトップへ"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7.5 9.5 9 4.5l4 5zM24.5 9.5 23 4.5l-4 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 10h19l-2 15.2a2 2 0 0 1-2 1.8h-11a2 2 0 0 1-2-1.8z" fill="currentColor"/><path d="M11 15h4.5M11 19h6.5M11 23h4.5" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></svg></a>
+    <div>
+      <h1>猫のおもちゃ口コミ</h1>
+      <p class="small muted">どんな猫が、どれくらい遊んだ？ 何日で飽きた？</p>
+    </div>
+  </header>
+  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/" aria-current="page"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
+
+  <div class="how">
+    <div><b>うちの子に近い猫で見る</b>年齢をえらぶと、その年の猫の「遊んだ度」で並びます。</div>
+    <div><b>飽きるまでの日数がわかる</b>色の帯で「その日だけ」〜「何か月も」の割合が見えます。</div>
+    <div><b>口コミは誰でも書ける</b>登録はいりません。ボタンを押して★と日数をえらぶだけ。</div>
+  </div>
+
+  <section class="card filters" aria-label="しぼりこみ">
+    <div><span class="lbl">猫の年齢</span>
+      <div class="seg" id="fAge"><button type="button" data-v="" aria-pressed="true">すべて</button></div></div>
+    <div><span class="lbl">おもちゃの種類</span>
+      <div class="seg" id="fType"><button type="button" data-v="" aria-pressed="true">すべて</button></div></div>
+    <div class="sortrow"><span class="small muted" id="countNote">読みこみ中…</span>
+      <div class="seg" id="fSort"><button type="button" data-v="stars" aria-pressed="true">遊んだ度が高い順</button><button type="button" data-v="n" aria-pressed="false">口コミが多い順</button></div></div>
+  </section>
+
+  <div class="toylist" id="list"></div>
+
+  <p class="small muted">口コミは、このページを見た人が書いたものです。運営者が内容を確かめたものではありません。おもちゃで遊ぶときは、誤って飲みこまないよう、ひもや小さな部品に気をつけて、遊んだあとは片づけてください。</p>
+  <p class="pr-note" id="prnote"></p>
+
+  <!--pxi--><img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=4BE9CS+98TDHE+2HOM+BWGDT" alt="" class="px"><!--/pxi-->
+  <footer>
+    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
+    <p>このページには広告リンクが含まれます。</p>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const RITEMS=/*ritems*/{"56nyan:10002314": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q39e4.2bo11200.g00q39e4.2bo12ad6%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252F56nyan%252F42063-001%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252F56nyan%252Fi%252F10002314%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/56nyan/cabinet/42/42063-001_1.jpg?_ex=64x64"}, "tcconlineshop:10000014": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tpal4.2bo1135f.g00tpal4.2bo122b5%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftcconlineshop%252Fatyc_013%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftcconlineshop%252Fi%252F10000014%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/tcconlineshop/cabinet/08713218/nekozyarasi02.jpg?_ex=64x64"}, "auc-ulmax:12186748": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qn2h4.2bo114b6.g00qn2h4.2bo12dc0%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fauc-ulmax%252F4984937666422%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fauc-ulmax%252Fi%252F12186748%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/auc-ulmax/cabinet/zg179/4984937666422.jpg?_ex=64x64"}, "rakuten24:11084474": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4580471867945%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11084474%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/945/4580471867945.jpg?_ex=64x64"}, "nisyoshop:10000216": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tsix4.2bo11a03.g00tsix4.2bo12ff6%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fnisyoshop%252Fdfish%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fnisyoshop%252Fi%252F10000216%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/nisyoshop/cabinet/main01/dfish.jpg?_ex=64x64"}, "felinebees:10000008": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00upw14.2bo11148.g00upw14.2bo12582%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ffelinebees%252Fchururun_fish%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ffelinebees%252Fi%252F10000008%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/felinebees/cabinet/11878686/imgrc0112484415.jpg?_ex=64x64"}, "spring-pet:10000790": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00sivz4.2bo11203.g00sivz4.2bo12a4c%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fspring-pet%252F10000790%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fspring-pet%252Fi%252F10000790%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/spring-pet/cabinet/05132223/05160199/05343578/imgrc0073891140.jpg?_ex=64x64"}, "nekonotomosya:10000031": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00td0w4.2bo1192b.g00td0w4.2bo1271b%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fnekonotomosya%252Fgurukoro-02%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fnekonotomosya%252Fi%252F10000031%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/nekonotomosya/cabinet/biiino/item/main-image/20220628110449_1.jpg?_ex=64x64"}, "linksonline:10000206": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00tgfb4.2bo11fad.g00tgfb4.2bo123e0%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Flinksonline%252Fch230619-006%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Flinksonline%252Fi%252F10000206%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/linksonline/cabinet/compass1687830344.jpg?_ex=64x64"}, "dog-kan:10196390": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00pr3z4.2bo117a3.g00pr3z4.2bo1287b%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fdog-kan%252F104916%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fdog-kan%252Fi%252F10196390%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/07991229/08167859/104916.jpg?_ex=64x64"}, "nekonogeboku:10000000": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00uqmi4.2bo11617.g00uqmi4.2bo124ec%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fnekonogeboku%252Fmatatabibou%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fnekonogeboku%252Fi%252F10000000%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/nekonogeboku/cabinet/main20261004/matatabibou.jpg?_ex=64x64"}, "crestshop:10044263": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00uq0b4.2bo11334.g00uq0b4.2bo12981%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fcrestshop%252F0639520260602%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fcrestshop%252Fi%252F10044263%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/crestshop/cabinet/y_tool_convert39/21c406492a376_01.jpg?_ex=64x64"}}/*/ritems*/;
+const AMAZON_TAG='gligla-22';
+const TYPES={jarashi:['猫じゃらし','--green'],dendo:['電動','--blue'],keri:['けりぐるみ','--rose'],ball:['ボール・知育','--kibble'],tunnel:['トンネル','--green'],tsume:['爪とぎ','--kibble'],matatabi:['またたび','--rose'],undo:['運動','--blue']};
+const TOYS=[
+ {id:'dabird',t:'jarashi',n:'ダ・バード（GO CAT）',d:'羽根が鳥のようにくるくる回る、さおつきの猫じゃらし',r:'56nyan:10002314',a:''},
+ {id:'jarashi-rod',t:'jarashi',n:'羽根の猫じゃらし（さおつき）',d:'羽根を付けかえられる、定番のさおタイプ',r:'tcconlineshop:10000014',a:''},
+ {id:'kashabun',t:'jarashi',n:'カシャカシャぶんぶん ビッグフライ（ペッツルート）',d:'カシャカシャ鳴る大きな羽根の虫',r:'auc-ulmax:12186748',a:''},
+ {id:'catchme',t:'dendo',n:'キャッチ・ミー・イフ・ユー・キャン2（猫壱）',d:'円の中を羽根がランダムに動く電動おもちゃ',r:'rakuten24:11084474',a:'B00JJAEEZ4'},
+ {id:'pichi-fish',t:'dendo',n:'お魚ピチピチ（電動の魚）',d:'さわるとピチピチ動く魚。またたびつき',r:'nisyoshop:10000216',a:''},
+ {id:'chururun',t:'dendo',n:'チュルルン（電動キッカー）',d:'音が鳴って動く、ひとり遊び用のおもちゃ',r:'felinebees:10000008',a:''},
+ {id:'keri-ebi',t:'keri',n:'けりぐるみ エビ（ペティオ）',d:'抱えてけりけりできる、またたび入りの大きなエビ',r:'spring-pet:10000790',a:'B003JY7GTC'},
+ {id:'gurukoro',t:'ball',n:'グルコロボール 2段（猫の友社）',d:'木のレールの中をボールが回る、ひとり遊び用',r:'nekonotomosya:10000031',a:'B097LDVZ6P'},
+ {id:'tunnel',t:'tunnel',n:'キャットトンネル S型',d:'カシャカシャ音がする、たためるトンネル',r:'linksonline:10000206',a:''},
+ {id:'tsumetogi',t:'tsume',n:'爪とぎ 縦型・ベッド2way（アイリスオーヤマ）',d:'立てても寝かせても使えるダンボールの爪とぎ',r:'dog-kan:10196390',a:''},
+ {id:'matatabi',t:'matatabi',n:'歯みがき またたび棒（猫の下僕）',d:'かじって遊ぶ、またたびの木の棒',r:'nekonogeboku:10000000',a:'B0DWL92GJZ'},
+ {id:'wheel',t:'undo',n:'木製キャットホイール（PETTOM）',d:'室内で走れる大きな回し車',r:'crestshop:10044263',a:'B0DJ744MT2'},
+];
+const AGES={kitten:'子猫（1歳まで）',young:'1〜3歳',adult:'4〜10歳',senior:'11歳以上'};
+const TRAITS={active:'活発',calm:'おっとり',shy:'怖がり',hunter:'狩りが好き',lazy:'あまり遊ばない子',multi:'多頭飼い'};
+const DAYS={d1:['その日だけ','--rose'],w1:['1週間くらい','--kibble'],m1:['1か月くらい','--blue'],long:['何か月も遊んでる','--green'],still:['まだ遊んでる（買ったばかり）','--line']};
+let fAge='', fType='', fSort='stars', SUM={}, openId=null;
+
+$('fAge').innerHTML+=Object.entries(AGES).map(([k,v])=>`<button type="button" data-v="${k}" aria-pressed="false">${v}</button>`).join('');
+$('fType').innerHTML+=Object.entries(TYPES).map(([k,[v]])=>`<button type="button" data-v="${k}" aria-pressed="false">${v}</button>`).join('');
+function seg(id,cb){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(b.dataset.v);render()})}
+seg('fAge',v=>fAge=v);seg('fType',v=>fType=v);seg('fSort',v=>fSort=v);
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function starHTML(v){const r=Math.round(v);return `<span class="stars" aria-label="★${v.toFixed(1)}">${'★'.repeat(r)}<span class="off">${'★'.repeat(5-r)}</span></span>`}
+function stat(id){const s=SUM[id];if(!s)return {n:0,avg:0,days:{}};
+  if(fAge){const a=s.byAge[fAge];return {n:a?a.n:0,avg:a?a.total/a.n:0,days:s.days,all:s.n}}
+  return {n:s.n,avg:s.total/s.n,days:s.days}}
+function render(){
+  let list=TOYS.filter(t=>!fType||t.t===fType).map(t=>({...t,s:stat(t.id)}));
+  list.sort((a,b)=>fSort==='n'?(b.s.n-a.s.n)||(b.s.avg-a.s.avg):(b.s.avg-a.s.avg)||(b.s.n-a.s.n));
+  const total=Object.values(SUM).reduce((x,y)=>x+y.n,0);
+  $('countNote').textContent=`${list.length}このおもちゃ・口コミ${total}件${fAge?'（'+AGES[fAge]+'の猫の評価で表示）':''}`;
+  $('list').innerHTML=list.map(t=>{const it=RITEMS[t.r]||{};const [tn,tc]=TYPES[t.t];const s=t.s;
+    const dn=Object.values(s.days).reduce((a,b)=>a+b,0);
+    const top=dn?Object.entries(s.days).sort((a,b)=>b[1]-a[1])[0][0]:'';
+    const bar=dn?`<div class="days" role="img" aria-label="飽きるまでの日数の割合">${Object.entries(DAYS).map(([k,[,c]])=>s.days[k]?`<i style="width:${s.days[k]/dn*100}%;background:var(${c})"></i>`:'').join('')}</div><span class="small muted">飽きるまで：いちばん多いのは「${DAYS[top][0]}」</span>`:'';
+    return `<article class="toy" id="t-${t.id}"><div class="top">
+      <a href="${esc(it.url||'#')}" target="_blank" rel="nofollow sponsored noopener"><img class="ph" src="${esc((it.img||'').replace('_ex=64x64','_ex=128x128'))}" width="96" height="96" alt="" loading="lazy"></a>
+      <div><span class="tp" style="background:var(${tc});color:#fff">${tn}</span><h3>${esc(t.n)}</h3><p class="ds">${esc(t.d)}</p>
+      <div class="score">${s.n?`${starHTML(s.avg)}<span class="avg">${s.avg.toFixed(1)}</span><span class="cnt">${s.n}件${fAge?'（'+AGES[fAge]+'）':''}</span>`:`<span class="cnt">${fAge&&s.all?AGES[fAge]+'の口コミはまだありません':'まだ口コミがありません'}</span>`}</div>
+      ${bar}</div></div>
+      <div class="acts">${it.url?`<a class="b-rak" href="${esc(it.url)}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a>`:''}${t.a?`<a class="b-amz" href="https://www.amazon.co.jp/dp/${t.a}?tag=${AMAZON_TAG}" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a>`:''}
+      <button type="button" class="open" data-id="${t.id}" aria-expanded="${openId===t.id}">${openId===t.id?'とじる':'口コミを見る・書く'}</button></div>
+      ${openId===t.id?`<div class="panel" id="panel"></div>`:''}</article>`}).join('');
+  if(openId)loadPanel(openId);
+}
+$('list').addEventListener('click',e=>{const b=e.target.closest('.open');if(b){openId=openId===b.dataset.id?null:b.dataset.id;render();if(openId)$('t-'+openId).scrollIntoView({block:'start',behavior:'smooth'});return}
+  const r=e.target.closest('.rep');if(r)report(r);});
+
+async function loadPanel(id){
+  const p=$('panel');p.innerHTML='<p class="empty">読みこみ中…</p>';
+  let rows=[];try{rows=(await (await fetch('/api/reviews?toy='+id)).json()).reviews||[]}catch(e){}
+  if(openId!==id)return;
+  const dleg=`<div class="dleg">${Object.values(DAYS).map(([n,c])=>`<span><i style="background:var(${c})"></i>${n}</span>`).join('')}</div>`;
+  p.innerHTML=dleg+(rows.length?rows.map(r=>`<div class="rv"><div class="meta">${starHTML(r.stars)}<span class="chip">${AGES[r.age]||''}</span>${(r.traits||'').split(',').filter(Boolean).map(t=>`<span class="chip">${TRAITS[t]||''}</span>`).join('')}<span class="chip" style="border-color:var(${(DAYS[r.days]||['','--line'])[1]})">${(DAYS[r.days]||[''])[0]}</span>
+     <button type="button" class="rep" data-id="${r.id}">通報</button></div>${r.comment?`<p>${esc(r.comment)}</p>`:''}<span class="small muted">${new Date(r.created_at).toLocaleDateString('ja-JP')}</span></div>`).join(''):'<p class="empty">まだ口コミがありません。うちの猫はどうだったか、最初の口コミを書いてみませんか。</p>')
+  +formHTML(id);
+  bindForm(id);
+}
+function chips(name,obj,multi){return `<div class="seg" data-name="${name}" data-multi="${multi?1:0}">${Object.entries(obj).map(([k,v])=>`<button type="button" data-v="${k}" aria-pressed="false">${Array.isArray(v)?v[0]:v}</button>`).join('')}</div>`}
+function formHTML(id){return `<form class="form" id="rf" novalidate><h4>口コミを書く</h4>
+  <div class="field"><span class="lbl">どれくらい遊んだ？</span><div class="starin" id="sIn">${[1,2,3,4,5].map(i=>`<button type="button" data-v="${i}" aria-label="★${i}">★</button>`).join('')}</div></div>
+  <div class="field"><span class="lbl">猫の年齢</span>${chips('age',AGES)}</div>
+  <div class="field"><span class="lbl">どんな猫？（3つまで・なくてもOK）</span>${chips('traits',TRAITS,true)}</div>
+  <div class="field"><span class="lbl">何日で飽きた？</span>${chips('days',DAYS)}</div>
+  <div class="field"><label for="cm" class="lbl">ひとこと（200字まで・なくてもOK）</label><textarea id="cm" maxlength="200" placeholder="例：最初の3日はずっと追いかけていた。羽根がとれやすい"></textarea></div>
+  <label class="hp">ウェブサイト<input name="website" id="hp" tabindex="-1" autocomplete="off"></label>
+  <p class="small muted">口コミはこのページで公開されます。名前や住所、URLは書かないでください。</p>
+  <button type="submit" class="send" id="sendBtn">投稿する</button><p class="msg" id="fmsg" hidden></p></form>`}
+function bindForm(id){
+  const st={stars:0,age:'',traits:[],days:''};
+  $('sIn').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;st.stars=+b.dataset.v;$('sIn').querySelectorAll('button').forEach(x=>x.classList.toggle('on',+x.dataset.v<=st.stars))});
+  $('rf').querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const n=g.dataset.name;
+    if(g.dataset.multi==='1'){const on=b.getAttribute('aria-pressed')!=='true';if(on&&st.traits.length>=3)return;b.setAttribute('aria-pressed',on);st.traits=[...g.querySelectorAll('[aria-pressed=true]')].map(x=>x.dataset.v)}
+    else{g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));st[n]=b.dataset.v}}));
+  $('rf').addEventListener('submit',async e=>{e.preventDefault();const m=$('fmsg');
+    if(!st.stars||!st.age||!st.days){m.hidden=false;m.className='msg ng';m.textContent='★と、猫の年齢、何日で飽きたかをえらんでください';return}
+    $('sendBtn').disabled=true;
+    try{const r=await fetch('/api/reviews',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({toy:id,...st,comment:$('cm').value,website:$('hp').value})});
+      const d=await r.json();
+      if(d.ok){m.hidden=false;m.className='msg ok';m.textContent='投稿しました。ありがとうございます！';await loadSummary();openId=id;render();}
+      else{m.hidden=false;m.className='msg ng';m.textContent=d.message||'投稿できませんでした';$('sendBtn').disabled=false}
+    }catch(err){m.hidden=false;m.className='msg ng';m.textContent='通信できませんでした。時間をおいてもう一度お願いします';$('sendBtn').disabled=false}});
+}
+async function report(b){
+  if(b.dataset.done)return;
+  if(!confirm('この口コミを通報しますか？ 3人から通報されると表示されなくなります。'))return;
+  try{await fetch('/api/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:+b.dataset.id})});b.textContent='通報しました';b.dataset.done=1}catch(e){}
+}
+async function loadSummary(){try{SUM=(await (await fetch('/api/reviews')).json()).summary||{}}catch(e){SUM={}}}
+$('prnote').textContent='楽天市場・Amazonのリンクは広告です。Amazonのアソシエイトとして、にゃん飯計算機は適格販売により収入を得ています。';
+(async()=>{await loadSummary();render();
+  const h=location.hash.slice(1);if(h&&TOYS.some(t=>t.id===h)){openId=h;render();$('t-'+h).scrollIntoView({block:'start'})}})();
+</script>
+</body>
+</html>

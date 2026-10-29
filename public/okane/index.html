@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>猫にかかるお金の計算｜1か月・1年・一生でいくら？ 多頭飼いも - にゃん飯計算機</title>
+<meta name="description" content="猫のごはん代・おやつ・猫砂・病院代などを入れると、1か月・1年・これから一生でかかるお金の目安がわかります。はじめの数字は飼い主の調査の平均。2匹・3匹の多頭飼いにも。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="猫にかかるお金の計算｜にゃん飯計算機">
+<meta property="og:description" content="1か月・1年・一生でいくら？ 項目ごとに入れて計算できます。">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#2f6f62">
+<link rel="canonical" href="https://nyanmeshi-keisan.pages.dev/okane/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<style>
+.items-in{display:flex;flex-direction:column;gap:8px}
+.it{display:grid;grid-template-columns:14px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--bg)}
+.it i{width:12px;height:12px;border-radius:4px}
+.it .t b{display:block;font-size:14px}
+.it .t small{display:block;font-size:11.5px;color:var(--sub);line-height:1.5}
+.it .box{background:var(--paper)}
+.it .box input{width:78px}
+.use{appearance:none;border:1.5px solid var(--green);background:var(--green-soft);color:var(--green);font:800 12px var(--f-body);border-radius:999px;padding:3px 10px;cursor:pointer;margin-top:3px}
+.big3{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:10px}
+.big3 .stat b{font-size:24px}
+.big3 .stat.main{grid-column:auto}
+.big3 .stat.main b{font-size:30px}
+.stack{display:flex;height:34px;border-radius:10px;overflow:hidden;background:var(--bg)}
+.stack i{display:block;height:100%}
+.brk{display:grid;grid-template-columns:1fr 1fr;gap:4px 18px;font-size:13.5px}
+.brk div{display:flex;align-items:center;gap:8px}
+.brk span.v{margin-left:auto;font-family:var(--f-num);font-weight:700}
+.brk span.p{color:var(--sub);font-size:12px;width:38px;text-align:right}
+.share{display:flex;flex-wrap:wrap;gap:8px}
+.share a,.share button{appearance:none;text-decoration:none;font:800 13.5px var(--f-body);border-radius:999px;padding:8px 14px;border:0;cursor:pointer;color:#fff}
+.share .th{background:#101010}.share .x{background:#000}.share .cp{background:var(--green);color:var(--on-green)}
+.sharecard{border-radius:16px;padding:16px;background:var(--rose-soft);display:flex;flex-direction:column;gap:6px}
+.sharecard b.num{font-size:28px;color:var(--rose)}
+.life{display:flex;flex-direction:column;gap:6px}
+.life svg{width:100%;height:auto}
+@media (max-width:640px){.big3{grid-template-columns:1fr 1fr}.big3 .stat.main{grid-column:1/-1}.brk{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <a class="mark" href="/" aria-label="にゃん飯計算機のトップへ"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7.5 9.5 9 4.5l4 5zM24.5 9.5 23 4.5l-4 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 10h19l-2 15.2a2 2 0 0 1-2 1.8h-11a2 2 0 0 1-2-1.8z" fill="currentColor"/><path d="M11 15h4.5M11 19h6.5M11 23h4.5" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></svg></a>
+    <div>
+      <h1>猫にかかるお金の計算</h1>
+      <p class="small muted">1か月・1年・これから一生で、いくらくらい？</p>
+    </div>
+  </header>
+  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/" aria-current="page"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
+
+  <section class="card" aria-label="猫のこと">
+    <span class="example">はじめの数字は、飼い主への調査の平均です。うちの金額に変えてください</span>
+    <div class="grid2">
+      <div class="field">
+        <span class="lbl">猫の数</span>
+        <div class="seg" id="cats">
+          <button type="button" data-v="1" aria-pressed="true">1匹</button>
+          <button type="button" data-v="2" aria-pressed="false">2匹</button>
+          <button type="button" data-v="3" aria-pressed="false">3匹</button>
+          <button type="button" data-v="4" aria-pressed="false">4匹</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="age">いまの年齢</label>
+        <div class="row"><input type="range" id="ageR" min="0" max="20" step="1" value="1" aria-label="年齢スライダー"><div class="box"><input id="age" type="number" inputmode="numeric" min="0" max="25" value="1"><span>歳</span></div></div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="life">何歳まで一緒にいる計算にする？</label>
+      <div class="row" style="flex-wrap:wrap"><div class="box"><input id="life" type="number" inputmode="numeric" min="1" max="30" value="16"><span>歳</span></div><span class="small muted">猫の平均寿命は15.62歳（ペットフード協会 令和4年調査）なので、はじめは16歳にしています</span></div>
+    </div>
+  </section>
+
+  <section class="card" aria-label="毎月のお金">
+    <h2>毎月かかるお金（1匹あたり）</h2>
+    <div class="items-in" id="monthly"></div>
+    <h2>1年に1回くらいかかるお金（1匹あたり）</h2>
+    <div class="items-in" id="yearly"></div>
+  </section>
+
+  <section class="card" aria-live="polite" aria-label="結果">
+    <div class="big3">
+      <div class="stat"><span>1か月</span><b class="num" id="rM">—</b></div>
+      <div class="stat"><span>1年</span><b class="num" id="rY">—</b></div>
+      <div class="stat main"><span id="rRestL">これから</span><b class="num" id="rRest">—</b></div>
+    </div>
+    <div class="stack" id="stack" role="img" aria-label="1年にかかるお金の内訳"></div>
+    <div class="brk" id="brk"></div>
+    <div class="life">
+      <h3 style="font-size:15px">年齢ごとの合計（ふえていく金額）</h3>
+      <svg id="lifeSvg" viewBox="0 0 640 200" role="img" aria-label="年齢ごとの合計金額のグラフ"></svg>
+    </div>
+    <p class="small muted" id="lifeNote"></p>
+    <div class="sharecard">
+      <span class="small" style="font-weight:800">シェア用</span>
+      <p id="shareText"></p>
+      <div class="share">
+        <a class="th" id="shTh" target="_blank" rel="noopener">Threadsに投稿</a>
+        <a class="x" id="shX" target="_blank" rel="noopener">Xに投稿</a>
+        <button type="button" class="cp" id="shCp">文章をコピー</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>はじめの数字について</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>項目</th><th>はじめの数字</th><th>出どころ</th></tr></thead>
+      <tbody>
+        <tr><td>主食のキャットフード</td><td class="num">月 3,748円</td><td>ペットフード協会「全国犬猫飼育実態調査」2023年</td></tr>
+        <tr><td>おやつ</td><td class="num">月 1,885円</td><td>同上</td></tr>
+        <tr><td>猫砂などトイレまわり</td><td class="num">月 1,970円</td><td>R&amp;Cマガジン 猫の飼い主3,000人調査（2023年）</td></tr>
+        <tr><td>爪とぎ・おもちゃなど</td><td class="num">月 1,239円</td><td>同上</td></tr>
+        <tr><td>ワクチン・健康診断など</td><td class="num">年 13,504円</td><td>アニコム損保「家庭どうぶつ白書2023」</td></tr>
+        <tr><td>けが・病気の治療</td><td class="num">年 31,138円</td><td>同上</td></tr>
+      </tbody>
+    </table></div>
+    <p class="small muted">平均なので、0円の人から何十万円の人までふくまれます。とくに治療費は、年をとるほど増えやすいお金です。病院代にそなえる方法には、ペット保険のほかに、毎月決まった額を積み立てておく方法もあります。</p>
+  </section>
+
+  <aside class="pr" aria-label="広告"><!--pr:okane--><p class="pr-h"><span class="pr-tag">PR</span>毎月のお金をおさえるなら</p><div class="grp"><p class="gt"><i style="background:var(--kibble)"></i>まとめ買いしやすいもの</p><div class="items"><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u8bu4.2bo11f3d.g00u8bu4.2bo12343%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftamaone%252Ftac0100270-2500g%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftamaone%252Fi%252F10000183%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/tamaone/cabinet/imgrc0117123806.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u8bu4.2bo11f3d.g00u8bu4.2bo12343%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftamaone%252Ftac0100270-2500g%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftamaone%252Fi%252F10000183%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">tama ボナペティ ラム＆フィッシュ</a><span class="nt">グレインフリーのドライフード。600g・1.5kg・2.5kgから選べます</span><span class="pc">楽天市場：1,540円〜<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u8bu4.2bo11f3d.g00u8bu4.2bo12343%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Ftamaone%252Ftac0100270-2500g%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Ftamaone%252Fi%252F10000183%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B0DT44V818?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00ugyn4.2bo115dc.g00ugyn4.2bo127a7%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakutensokuhaimart%252F4901133875649%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakutensokuhaimart%252Fi%252F10037036%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/rakutensokuhaimart/cabinet/rakuten24/649/4901133875649.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00ugyn4.2bo115dc.g00ugyn4.2bo127a7%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakutensokuhaimart%252F4901133875649%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakutensokuhaimart%252Fi%252F10037036%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">チャオ ちゅ〜る 総合栄養食バラエティ 80本</a><span class="nt">総合栄養食タイプ。おやつの分はごはんから引いて計算します</span><span class="pc">楽天市場：3,204円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00ugyn4.2bo115dc.g00ugyn4.2bo127a7%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakutensokuhaimart%252F4901133875649%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakutensokuhaimart%252Fi%252F10037036%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B0C2C8SVV5?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div></div></div><div class="grp"><p class="gt"><i style="background:var(--green)"></i>長く使えるもの</p><div class="items"><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00rrql4.2bo11af7.g00rrql4.2bo124be%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkaguzaku%252Fyj-5613%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkaguzaku%252Fi%252F10007763%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/kaguzaku/cabinet/01023319k/04410742k/07432811/yj-5613_sam01k.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00rrql4.2bo11af7.g00rrql4.2bo124be%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkaguzaku%252Fyj-5613%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkaguzaku%252Fi%252F10007763%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">山崎実業 密閉袋ごとペットフードストッカー 3kg</a><span class="nt">袋のまま入れて密閉できる。計量カップつき</span><span class="pc">楽天市場：3,850円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00rrql4.2bo11af7.g00rrql4.2bo124be%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fkaguzaku%252Fyj-5613%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fkaguzaku%252Fi%252F10007763%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B09LY2RQV8?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div><div class="item"><a class="ph" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u09g4.2bo116e4.g00u09g4.2bo1246e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fcocosmile-online%252F4972547928139%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fcocosmile-online%252Fi%252F10002020%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener"><img src="https://thumbnail.image.rakuten.co.jp/@0_mall/cocosmile-online/cabinet/08236211/08327419/11747469/new928139-1.jpg?_ex=128x128" width="88" height="88" alt="" loading="lazy"></a><div class="tx"><a class="nm" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u09g4.2bo116e4.g00u09g4.2bo1246e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fcocosmile-online%252F4972547928139%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fcocosmile-online%252Fi%252F10002020%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">ジェックス ピュアクリスタル グラッシーR 1.5L</a><span class="nt">フィルターで水をきれいにする猫用の給水器</span><span class="pc">楽天市場：5,400円<small>（2026年10月29日時点）</small></span><span class="bt"><a class="b-rak" href="https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&amp;rakuten=y&amp;a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00u09g4.2bo116e4.g00u09g4.2bo1246e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fcocosmile-online%252F4972547928139%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fcocosmile-online%252Fi%252F10002020%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a><a class="b-amz" href="https://www.amazon.co.jp/dp/B0CWK6V4P8?tag=gligla-22" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a></span></div></div></div></div><img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=4BE9CS+98TDHE+2HOM+BWGDT" alt="" class="px"><p class="pr-note">楽天市場の価格は確認した日のものです。Amazonのアソシエイトとして、にゃん飯計算機は適格販売により収入を得ています。</p><!--/pr:okane--></aside>
+
+  <footer>
+    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
+    <p>この計算はおおよその目安です。物価の変化や病気などで、実際の金額は変わります。</p>
+    <p>このページには広告リンクが含まれます。</p>
+  </footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const man=n=>n>=10000?(Math.round(n/1000)/10).toLocaleString('ja-JP')+'万円':fmt(n)+'円';
+const M=[
+  {k:'food',n:'主食のキャットフード',s:'',v:3748,c:'--green'},
+  {k:'snack',n:'おやつ',s:'',v:1885,c:'--kibble'},
+  {k:'toilet',n:'猫砂などトイレまわり',s:'猫砂・シート・消臭',v:1970,c:'--blue'},
+  {k:'goods',n:'爪とぎ・おもちゃなど',s:'消耗品',v:1239,c:'--rose'},
+  {k:'ins',n:'ペット保険の保険料',s:'入っていなければ0円',v:0,c:'--ink'},
+];
+const Y=[
+  {k:'care',n:'ワクチン・健康診断など',s:'予防のためのお金',v:13504,c:'--sub'},
+  {k:'vet',n:'けが・病気の治療',s:'平均。0円の年も多い',v:31138,c:'--line'},
+  {k:'other',n:'そのほか',s:'ペットホテル・トリミングなど',v:0,c:'--kibble-soft'},
+];
+let cats=1;
+function row(x,unit){return `<div class="it"><i style="background:var(${x.c})"></i><span class="t"><b>${x.n}</b>${x.s?`<small>${x.s}</small>`:''}${x.k==='food'?'<button type="button" class="use" id="useFood" hidden></button>':''}</span><div class="box"><input id="v_${x.k}" type="number" inputmode="numeric" min="0" step="100" value="${x.v}"><span>円/${unit}</span></div></div>`}
+$('monthly').innerHTML=M.map(x=>row(x,'月')).join('');
+$('yearly').innerHTML=Y.map(x=>row(x,'年')).join('');
+// ごはんの量ページで出した額があれば使える
+try{const d=JSON.parse(localStorage.getItem('nyanmeshi-month')||'null');
+  if(d&&d.yen>0){const b=$('useFood');b.hidden=false;b.textContent=`ごはんの量ページの計算（月${fmt(d.yen)}円）を使う`;
+    b.addEventListener('click',()=>{$('v_food').value=d.yen;update();});}}catch(e){}
+
+function val(k){const v=parseFloat($('v_'+k).value);return v>0?v:0}
+function update(){
+  const age=Math.max(0,parseFloat($('age').value)||0), life=Math.max(1,parseFloat($('life').value)||16);
+  const parts=[...M.map(x=>({...x,y:val(x.k)*12})),...Y.map(x=>({...x,y:val(x.k)}))].filter(x=>x.y>0);
+  const year1=parts.reduce((a,b)=>a+b.y,0);
+  const year=year1*cats, month=year/12;
+  const rest=Math.max(0,life-age), restSum=year*rest, lifeSum=year1*life;
+  $('rM').innerHTML=fmt(month)+'<small>円</small>';
+  $('rY').innerHTML=fmt(year)+'<small>円</small>';
+  $('rRestL').textContent=rest>0?`これから${life}歳まで（あと${rest}年）`:'これから';
+  $('rRest').textContent=man(restSum);
+  $('stack').innerHTML=parts.map(p=>`<i style="width:${p.y/year1*100}%;background:var(${p.c})" title="${p.n}"></i>`).join('');
+  $('brk').innerHTML=parts.sort((a,b)=>b.y-a.y).map(p=>`<div><i class="dot" style="background:var(${p.c})"></i>${p.n}<span class="v">${fmt(p.y*cats)}円/年</span><span class="p">${Math.round(p.y/year1*100)}%</span></div>`).join('');
+  // 年齢ごとの累計
+  const W=640,H=200,L=56,R=12,T=14,B=28, span=Math.max(life,1);
+  const maxV=year1*span*cats; const x=a=>L+(W-L-R)*a/span, y=v=>H-B-(H-T-B)*v/(maxV||1);
+  let g='';
+  for(let i=0;i<=4;i++){const v=maxV*i/4;g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--sub)" font-family="JetBrains Mono,monospace">${Math.round(v/10000)}万</text>`}
+  for(let a=0;a<=span;a+=span>12?2:1)g+=`<text x="${x(a)}" y="${H-8}" text-anchor="middle" font-size="11" fill="var(--sub)" font-family="JetBrains Mono,monospace">${a}</text>`;
+  const ax=Math.min(age,span);
+  g+=`<rect x="${L}" y="${T}" width="${x(ax)-L}" height="${H-T-B}" fill="var(--bg)"/>`;
+  g+=`<path d="M${x(0)} ${y(0)} L${x(span)} ${y(maxV)}" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 4" fill="none"/>`;
+  g+=`<path d="M${x(ax)} ${y(year1*ax*cats)} L${x(span)} ${y(maxV)} L${x(span)} ${y(year1*ax*cats)} Z" fill="var(--rose-soft)"/>`;
+  g+=`<path d="M${x(ax)} ${y(year1*ax*cats)} L${x(span)} ${y(maxV)}" stroke="var(--rose)" stroke-width="3" fill="none"/>`;
+  g+=`<circle cx="${x(ax)}" cy="${y(year1*ax*cats)}" r="6" fill="var(--rose)"/><text x="${x(ax)+8}" y="${y(year1*ax*cats)-8}" font-size="12" font-weight="700" fill="var(--ink)">いま（${age}歳）</text>`;
+  g+=`<text x="${x(span)-8}" y="${y(maxV)+40}" text-anchor="end" font-size="12" font-weight="700" fill="var(--rose)">あと${man(restSum)}</text>`;
+  $('lifeSvg').innerHTML=g;
+  $('lifeNote').textContent=`0歳から${life}歳までの合計は、${cats>1?cats+'匹で':''}約${man(lifeSum*cats)}です（1年の金額 × 年数で計算。物価の変化や、年をとってからの治療費の増え方は入れていません）。`;
+  const txt=`うちの猫${cats>1?cats+'匹':''}にこれからかかるお金、${life}歳までで約${man(restSum)}でした（1か月 約${fmt(month)}円）`;
+  $('shareText').textContent=txt;
+  const url=location.origin+location.pathname;
+  $('shTh').href='https://www.threads.net/intent/post?text='+encodeURIComponent(txt+'\n'+url);
+  $('shX').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(txt)+'&url='+encodeURIComponent(url);
+}
+$('shCp').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('shareText').textContent+'\n'+location.origin+location.pathname);$('shCp').textContent='コピーしました'}catch(e){$('shCp').textContent='コピーできませんでした'}setTimeout(()=>$('shCp').textContent='文章をコピー',1800)});
+$('cats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('cats').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));cats=+b.dataset.v;update()});
+$('ageR').addEventListener('input',()=>{$('age').value=$('ageR').value;update()});
+$('age').addEventListener('input',()=>{if($('age').value!=='')$('ageR').value=$('age').value;update()});
+document.querySelectorAll('input').forEach(el=>el.addEventListener('input',update));
+update();
+</script>
+</body>
+</html>

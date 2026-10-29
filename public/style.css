@@ -1,0 +1,149 @@
+/* 計量カップの「めもり」が主役。上から 入力 → カップ → 比較 → 計算のしかた */
+:root{
+  --bg:#eef4f2; --paper:#ffffff; --ink:#1d2a27; --sub:#5a6b66; --line:#d3e0dc;
+  --green:#2f6f62; --green-soft:#dcece7; --on-green:#ffffff;
+  --kibble:#d4922a; --kibble-soft:#f8ead2; --kibble-ink:#4a2f05;
+  --rose:#c4566a; --rose-soft:#f8e3e7;
+  --blue:#3f6fb5; --blue-soft:#e3ecf8;
+  --f-body:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Hiragino Sans",system-ui,sans-serif;
+  --f-num:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --paper:#18221f; --ink:#e6efec; --sub:#9db0aa; --line:#2a3834;
+  --green:#5fbfaa; --green-soft:#17302a; --on-green:#0c1a17;
+  --kibble:#e8a943; --kibble-soft:#3a2c14; --kibble-ink:#f8ead2;
+  --rose:#ec8496; --rose-soft:#3b2026; --blue:#86aee8; --blue-soft:#1b2a40; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --paper:#18221f; --ink:#e6efec; --sub:#9db0aa; --line:#2a3834;
+  --green:#5fbfaa; --green-soft:#17302a; --on-green:#0c1a17;
+  --kibble:#e8a943; --kibble-soft:#3a2c14; --kibble-ink:#f8ead2;
+  --rose:#ec8496; --rose-soft:#3b2026; --blue:#86aee8; --blue-soft:#1b2a40; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.75;padding-inline:16px;padding-block:18px 60px}
+.wrap{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{margin:0;line-height:1.35;text-wrap:balance}
+p{margin:0}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.small{font-size:12.5px}
+.muted{color:var(--sub)}
+.brand{display:flex;align-items:center;gap:12px}
+.mark{width:46px;height:46px;border-radius:14px;background:var(--green);display:grid;place-items:center;flex:none;color:var(--on-green)}
+h1{font-size:clamp(24px,6vw,32px);font-weight:800}
+.lede{color:var(--sub);max-width:60ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.card h2{font-size:17px}
+.example{align-self:flex-start;font-size:12.5px;background:var(--kibble-soft);color:var(--ink);border-radius:6px;padding:2px 8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.field>.lbl{font-weight:800;font-size:14px}
+.row{display:flex;align-items:center;gap:10px}
+.row input[type=range]{flex:1;min-width:0;accent-color:var(--green)}
+.box{display:flex;align-items:baseline;gap:4px;border:2px solid var(--line);border-radius:10px;padding:4px 10px;background:var(--bg)}
+.box:focus-within{border-color:var(--green)}
+.box input{width:66px;border:0;background:transparent;font:700 18px var(--f-num);color:var(--ink);text-align:right;padding:0;min-width:0}
+.box input:focus{outline:none}
+.box span{font-size:12.5px;color:var(--sub);white-space:nowrap}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{appearance:none;font:700 13px var(--f-body);border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--green);border-color:var(--green);color:var(--on-green)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--kibble);outline-offset:2px}
+/* フード入力 */
+.foods{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.food{border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.food .tag{display:inline-flex;align-items:center;gap:8px;font-weight:800}
+.dot{width:12px;height:12px;border-radius:50%}
+.food .namebox{border:2px solid var(--line);border-radius:10px;background:var(--paper);padding:6px 10px;font:700 14px var(--f-body);color:var(--ink);width:100%}
+.food .namebox:focus{outline:none;border-color:var(--green)}
+.food .box{background:var(--paper)}
+.food .box input{width:64px}
+.food .pair{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;flex-wrap:wrap}
+.toggleB{appearance:none;border:1.5px dashed var(--line);background:transparent;color:var(--sub);border-radius:14px;font:700 14px var(--f-body);cursor:pointer;min-height:120px}
+/* 結果 */
+.result{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center}
+.cupwrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.cupwrap svg{width:170px;height:auto}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
+.stat{border-radius:12px;padding:10px 12px;background:var(--bg)}
+.stat>span{display:block;font-size:12px;font-weight:700;color:var(--sub)}
+.stat b{font:700 22px var(--f-num)}
+.stat b small{font-size:13px;font-weight:500;margin-left:2px}
+.stat.main{background:var(--green-soft);grid-column:1/-1}
+.stat.main b{font-size:32px;color:var(--green)}
+.cmp{display:flex;flex-direction:column;gap:10px}
+.cmp-item{display:flex;flex-direction:column;gap:4px}
+.cmp-head{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;font-weight:700}
+.cmp-head .nm{display:inline-flex;align-items:center;gap:6px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmp-row{display:block}
+.cmp-row .bar,.cmp-item .bar{height:18px;border-radius:6px;background:var(--bg);overflow:hidden}
+.cmp-item .bar i{display:block;height:100%;border-radius:6px;transition:width .3s ease}
+.cmp-row .num{text-align:right;font-weight:700}
+.cmp-note{font-size:13.5px;padding:8px 12px;border-radius:10px;background:var(--kibble-soft)}
+.warn{font-size:13.5px;padding:8px 12px;border-radius:10px;background:var(--rose-soft)}
+/* PR */
+.pr{border:1px solid var(--line);border-radius:16px;background:var(--paper);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.pr-h{font-weight:800;display:flex;gap:8px;align-items:center}
+.pr-tag{font-size:11px;font-weight:700;color:var(--sub);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{text-decoration:none;font-weight:700;font-size:13.5px;border-radius:10px;padding:8px 12px;border:1.5px solid var(--line);color:var(--ink);background:var(--bg)}
+.links a:hover{border-color:var(--green)}
+.links a.primary{background:var(--green);border-color:var(--green);color:var(--on-green)}
+/* 計算のしかた */
+.formula{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px}
+.formula span{padding:6px 10px;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.formula b{color:var(--green)}
+.formula i{font-style:normal;color:var(--sub);font-weight:800}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+th{font-size:12px;color:var(--sub)}
+td.num{font-family:var(--f-num)}
+.tblwrap{overflow-x:auto}
+.tips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tip{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px}
+.tip b{display:block;margin-bottom:2px}
+.tip p{color:var(--sub);font-size:14px}
+footer{font-size:12px;color:var(--sub);display:flex;flex-direction:column;gap:4px}
+footer a{color:inherit}
+.px{position:absolute;width:1px;height:1px;border:0}
+@media (max-width:640px){
+  .grid2,.foods,.tips{grid-template-columns:1fr}
+  .result{grid-template-columns:1fr;justify-items:center}
+  .stats{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* 共通メニュー */
+.gnav{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:-4px -16px 0;padding:4px 16px 2px}
+.gnav::-webkit-scrollbar{display:none}
+.gnav a{flex:none;display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-weight:800;font-size:13.5px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px}
+.gnav a i{width:9px;height:9px;border-radius:50%}
+.gnav a[aria-current=page]{background:var(--green);border-color:var(--green);color:var(--on-green)}
+.brand a{color:inherit;text-decoration:none}
+.fnav{display:flex;flex-wrap:wrap;gap:4px 14px}
+.fnav a{color:var(--sub)}
+
+/* 商品カード */
+.grp{display:flex;flex-direction:column;gap:8px}
+.gt{margin:0;font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px}
+.gt i{width:10px;height:10px;border-radius:3px}
+.items{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.item{display:grid;grid-template-columns:88px 1fr;gap:12px;padding:10px;border-radius:14px;background:var(--bg);border:1.5px solid transparent}
+.item:hover{border-color:var(--line)}
+.item .ph img{width:88px;height:88px;object-fit:contain;border-radius:10px;background:#fff;display:block}
+.item .tx{display:flex;flex-direction:column;gap:3px;min-width:0}
+.item .nm{font-weight:800;font-size:14px;color:var(--ink);line-height:1.45;text-decoration:underline;text-decoration-color:var(--green);text-underline-offset:3px}
+.item .nt{font-size:12.5px;color:var(--sub);line-height:1.55}
+.item .pc{font-size:12.5px}
+.item .pc small{color:var(--sub);margin-left:3px}
+.item .bt{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.item .bt a{font-weight:800;font-size:12.5px;text-decoration:none;border-radius:999px;padding:5px 12px;color:#fff}
+.item .b-rak{background:#bf0000}
+.item .b-amz{background:#232f3e}
+.pr-note{margin:0;font-size:12px;color:var(--sub)}
+@media (max-width:640px){.items{grid-template-columns:1fr}}
+
+/* フードを選ぶ */
+.fsel{width:100%;font:700 14px var(--f-body);color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:10px;padding:7px 10px}
+.fsel:focus{outline:none;border-color:var(--green)}
+.src{font-size:11.5px;color:var(--sub)}
+.src a{color:inherit}
+.gnav a[aria-current=page] i{background:var(--on-green)!important}
