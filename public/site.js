@@ -21,6 +21,24 @@
     var box = el.closest('.box'); if (box) box.classList.remove('ex');
     markEx();
   };
+  // 例の数字が入った欄にふれたら、いったん空にする（そのまま打つと例とくっつかないように）。
+  // 何も入れずに離れたら、例の数字に戻す。
+  document.addEventListener('focusin', function(e){
+    var el = e.target;
+    if (!el.matches || !el.matches('input.ex') || el.readOnly || el.type === 'text') return;
+    if (el.dataset.exv != null) return;
+    el.dataset.exv = el.value;
+    el.dataset.ph = el.getAttribute('placeholder') || '';
+    el.setAttribute('placeholder', el.value);
+    el.value = '';
+  });
+  document.addEventListener('focusout', function(e){
+    var el = e.target;
+    if (!el.dataset || el.dataset.exv == null) return;
+    if (el.value === '' && el.classList.contains('ex')) el.value = el.dataset.exv;
+    if (el.dataset.ph) el.setAttribute('placeholder', el.dataset.ph); else el.removeAttribute('placeholder');
+    delete el.dataset.exv; delete el.dataset.ph;
+  });
   document.addEventListener('input', function(e){ if (e.target.closest && e.target.matches('[data-ex]')) unEx(e.target); }, true);
   document.addEventListener('change', function(e){ if (e.target.closest && e.target.matches('[data-ex]')) unEx(e.target); }, true);
 

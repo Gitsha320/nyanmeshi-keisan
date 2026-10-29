@@ -214,7 +214,7 @@ select.ex{color:var(--sub);border-style:dashed!important}
 @media (max-width:760px){
   .gnav{display:none}
   body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--paper);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+  .tabbar{display:grid;grid-template-columns:repeat(6,1fr);position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--paper);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.06)}
   .tabbar a{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--sub);font-size:10.5px;font-weight:800;padding:4px 0;border-radius:12px}
   .tabbar a svg{width:24px;height:24px}
   .tabbar a[aria-current=page]{color:var(--c,var(--green));background:var(--bg)}

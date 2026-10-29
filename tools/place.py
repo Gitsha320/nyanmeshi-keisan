@@ -119,7 +119,7 @@ def main():
          '<p class="pr-h"><span class="pr-tag">PR</span>毎月のお金をおさえるなら</p>' + group('まとめ買いしやすいもの', '--kibble', [FOOD[0], EXTRA[0]]) +
          group('長く使えるもの', '--green', [TOOLS[1], TOOLS[3]]) + pxi + note)
     # 4) おもちゃ口コミ：ページのJSに楽天リンクを入れる
-    for of in [os.path.join(PUB, 'omocha/index.html'), os.path.join(PUB, 'okane/index.html')]:
+    for of in [os.path.join(PUB, p) for p in ('omocha/index.html', 'okane/index.html', 'food/index.html')]:
       if os.path.exists(of):
         t = open(of, encoding='utf-8').read()
         ids = re.findall(r"\br:'([a-z0-9-]+:[0-9]+)'", t)
