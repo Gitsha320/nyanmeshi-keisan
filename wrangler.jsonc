@@ -4,5 +4,9 @@
   "pages_build_output_dir": "./public",
   "d1_databases": [
     { "binding": "DB", "database_name": "nyanmeshi", "database_id": "760a014e-168d-4d9e-9a63-19ed59db11d8" }
-  ]
+  ],
+  // メール通知：Pages の設定で、シークレット EMAIL_API_TOKEN（Email Sending: Edit の権限）と NOTIFY_TO（通知を受け取るアドレス。Email Routing で確認済みのもの）を入れる
+  "vars": {
+    "NOTIFY_FROM": "noreply@nekomawari.com"
+  }
 }

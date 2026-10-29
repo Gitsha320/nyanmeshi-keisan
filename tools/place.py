@@ -11,7 +11,7 @@ AMAZON_ON = True
 AMAZON_TAG = 'gligla-22'
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
-IDX = os.path.join(ROOT, 'public', 'index.html')
+IDX = os.path.join(ROOT, 'public', 'gohan', 'index.html')
 ITEMS = {d['id']: d for d in json.load(open(os.path.join(ROOT, 'tools', 'rakuten_items.json'), encoding='utf-8'))}
 
 def yen(p):

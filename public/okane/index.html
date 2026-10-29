@@ -65,6 +65,7 @@
 .life svg{width:100%;height:auto}
 @media (max-width:640px){.it{grid-template-columns:14px 1fr}.it>.box{grid-column:2;justify-self:end}.pk{grid-template-columns:52px 1fr}.pk .q{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:flex-end}.big3{grid-template-columns:1fr 1fr}.big3 .stat.main{grid-column:1/-1}.brk{grid-template-columns:1fr}}
 </style>
+<script src="/site.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -76,12 +77,18 @@
       <p class="small muted">うちの猫に、1か月と1年でいくらくらいかかる？</p>
     </div>
   </header>
-  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/" aria-current="page"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
+  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/gohan/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/" aria-current="page"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
+
+  <div class="intro">
+    <div class="ic"><span class="ico" style="background:var(--rose)"><!--ico:okane--><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 7.5 12 12l3.5-4.5"/><path d="M8.5 12.5h7M8.5 15.5h7M12 12v5.5"/></svg><!--/ico--></span><div><b>1か月と1年の合計</b><p>ごはん・おやつ・猫砂・病院代など、猫にかかるお金をまとめて出します。</p></div></div>
+    <div class="ic"><span class="ico" style="background:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.5 12h-11z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span><div><b>商品をえらんで計算</b><p>猫砂・シート・おやつは、使っている商品と1か月に使う数から計算できます。</p></div></div>
+    <div class="ic"><span class="ico" style="background:var(--kibble)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7h16v-7"/><path d="M12 3v12M8 7l4-4 4 4"/></svg></span><div><b>内訳つきでシェア</b><p>結果は、項目ごとの金額つきの文章でThreadsやXに投稿できます。</p></div></div>
+  </div>
+  <p class="flow"><span><i>1</i>猫の数</span><em>→</em><span><i>2</i>金額</span><em>→</em><span><i>3</i>計算する</span></p>
 
   <section class="card" aria-label="猫のこと">
-    <span class="example">はじめの金額は、飼い主への調査の平均 × 猫の数です。うちの金額に変えてください</span>
+    <h2><span class="stepn">1</span>猫の数</h2>
     <div class="field">
-      <span class="lbl">猫の数</span>
       <div class="seg" id="cats">
         <button type="button" data-v="1" aria-pressed="true">1匹</button>
         <button type="button" data-v="2" aria-pressed="false">2匹</button>
@@ -94,29 +101,29 @@
   </section>
 
   <section class="card" aria-label="毎月のお金">
-    <h2>毎月かかるお金（うち全体）</h2>
+    <h2><span class="stepn">2</span>毎月かかるお金（うち全体）</h2>
+    <p class="exnote"><span class="exchip">例</span>点線の金額は、飼い主への調査の平均 × 猫の数です。うちの金額に変えてください</p>
     <p class="small muted">おやつ・トイレまわり・爪とぎは「商品からえらぶ」にすると、商品の値段 × 1か月に使う数で計算できます。</p>
     <div class="items-in" id="monthly"></div>
     <h2>1年に1回くらいかかるお金（うち全体）</h2>
     <div class="items-in" id="yearly"></div>
   </section>
 
-  <section class="card" aria-live="polite" aria-label="結果">
+  <div class="calcwrap">
+    <button type="button" class="calcbtn" data-show="resultSec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M8.5 7.5h7M8.5 12h1M12 12h1M15.5 12h0M8.5 16h1M12 16h1M15.5 16h0"/></svg><span class="lbl">計算する</span></button>
+    <span class="small">入力できたら押してください。結果が下に出ます</span>
+  </div>
+
+  <section class="card" aria-live="polite" aria-label="結果" id="resultSec" hidden>
+    <h2><span class="stepn">3</span>結果</h2>
+    <p class="exwarn" hidden>平均の金額（点線）のままの項目があります。うちの金額に変えると、もっと実際に近くなります。</p>
     <div class="big2">
       <div class="stat main"><span>1か月</span><b class="num" id="rM">—</b></div>
       <div class="stat"><span>1年</span><b class="num" id="rY">—</b></div>
     </div>
     <div class="stack" id="stack" role="img" aria-label="1年にかかるお金の内訳"></div>
     <div class="brk" id="brk"></div>
-    <div class="sharecard">
-      <span class="small" style="font-weight:800">シェア用</span>
-      <p id="shareText"></p>
-      <div class="share">
-        <a class="th" id="shTh" target="_blank" rel="noopener">Threadsに投稿</a>
-        <a class="x" id="shX" target="_blank" rel="noopener">Xに投稿</a>
-        <button type="button" class="cp" id="shCp">文章をコピー</button>
-      </div>
-    </div>
+    <div class="sharebox" id="shareBox"><span class="ttl">結果をシェアする</span><pre></pre><div class="share"><a class="th" target="_blank" rel="noopener">Threadsに投稿</a><a class="x" target="_blank" rel="noopener">Xに投稿</a><button type="button" class="cp">文章をコピー</button></div></div>
   </section>
 
   <section class="card">
@@ -139,7 +146,7 @@
 
   <!--pxi--><img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=4BE9CS+98TDHE+2HOM+BWGDT" alt="" class="px"><!--/pxi-->
   <footer>
-    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
+    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ホーム</a><a href="/gohan/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
     <p>この計算はおおよその目安です。物価の変化や病気などで、実際の金額は変わります。商品の値段は楽天市場で確認した日のものです。</p>
     <p>このページには広告リンクが含まれます。</p>
   </footer>
@@ -148,6 +155,7 @@
 <script>
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const man=n=>n>=10000?(Math.round(n/1000)/10).toLocaleString('ja-JP')+'万円':fmt(n)+'円';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const RITEMS=/*ritems*/{"chanet:10486912": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00pyjh4.2bo11e1e.g00pyjh4.2bo12415%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fchanet%252F394048%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fchanet%252Fi%252F10486912%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/chanet/cabinet/3945/394048-1.jpg?_ex=64x64", "price": "970円～", "at": "2026/10/29"}, "rakutensokuhaimart:10037036": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00ugyn4.2bo115dc.g00ugyn4.2bo127a7%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakutensokuhaimart%252F4901133875649%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakutensokuhaimart%252Fi%252F10037036%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakutensokuhaimart/cabinet/rakuten24/649/4901133875649.jpg?_ex=64x64", "price": "3204円", "at": "2026/10/29"}, "rakuten24:10587019": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252Fe488505h%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F10587019%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/155/4520699651155.jpg?_ex=64x64", "price": "6050円", "at": "2026/10/29"}, "rakuten24:10649441": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4520699677919%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F10649441%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/919/4520699677919.jpg?_ex=64x64", "price": "2153円", "at": "2026/10/29"}, "rakuten24:11282345": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4901070580026%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11282345%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/026/4901070580026.jpg?_ex=64x64", "price": "5980円", "at": "2026/10/29"}, "rakuten24:11282359": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F4901070580125%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11282359%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/125/4901070580125.jpg?_ex=64x64", "price": "8410円", "at": "2026/10/29"}, "beisia:10031447": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00s0vm4.2bo11702.g00s0vm4.2bo12faa%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fbeisia%252F4903351011250%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fbeisia%252Fi%252F10031447%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/beisia/cabinet/09095992/4903351011250.jpg?_ex=64x64", "price": "3190円", "at": "2026/10/29"}, "dog-kan:10002747": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00pr3z4.2bo117a3.g00pr3z4.2bo1287b%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fdog-kan%252Fa533439%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fdog-kan%252Fi%252F10002747%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/11076425/11076426/a533439.jpg?_ex=64x64", "price": "3980円", "at": "2026/10/29"}, "rakuten24:11251669": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00r1364.2bo113ce.g00r1364.2bo12c5e%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Frakuten24%252F405258%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Frakuten24%252Fi%252F11251669%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/rakuten24/cabinet/258/405258.jpg?_ex=64x64", "price": "4580円", "at": "2026/10/29"}, "dog-kan:10004557": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00pr3z4.2bo117a3.g00pr3z4.2bo1287b%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fdog-kan%252F886730%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fdog-kan%252Fi%252F10004557%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/dog-kan/cabinet/11076425/11076426/8867300928.jpg?_ex=64x64", "price": "4480円～", "at": "2026/10/29"}, "cat-land:10019398": {"url": "https://rpx.a8.net/svt/ejp?a8mat=4BE9CS+98TDHE+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00qr6o4.2bo1116d.g00qr6o4.2bo12401%2Fa26100566978_4BE9CS_98TDHE_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fcat-land%252Fi523372%252F%26m%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fcat-land%252Fi%252F10019398%252F%26rafcid%3Dwsc_i_is_a9f492a7-8ef9-40e2-ab89-4bc43a1ee283", "img": "https://thumbnail.image.rakuten.co.jp/@0_mall/cat-land/cabinet/jishahin33/515368_00.jpg?_ex=64x64", "price": "1390円", "at": "2026/10/29"}}/*/ritems*/;
 const AMAZON_TAG='gligla-22';
@@ -215,6 +223,7 @@ try{const d=JSON.parse(localStorage.getItem('nyanmeshi-month')||'null');
 function update(){
   [...M,...Y].forEach(x=>{const st=ST[x.k],inp=$('v_'+x.k);
     if(st.mode==='auto')inp.value=x.v*cats;
+    const isEx=st.mode==='auto'&&x.v>0; inp.classList.toggle('ex',isEx); inp.closest('.box').classList.toggle('ex',isEx);
     if(st.mode==='items')inp.value=Math.round(st.items.reduce((a,it)=>a+price(GOODS[it.i].r)*it.q,0));});
   const parts=[...M.map(x=>({...x,y:(parseFloat($('v_'+x.k).value)||0)*12})),...Y.map(x=>({...x,y:parseFloat($('v_'+x.k).value)||0}))].filter(x=>x.y>0);
   const year=parts.reduce((a,b)=>a+b.y,0), month=year/12;
@@ -222,17 +231,20 @@ function update(){
   $('rY').innerHTML=fmt(year)+'<small>円</small>';
   $('stack').innerHTML=parts.map(p=>`<i style="width:${p.y/year*100}%;background:var(${p.c})" title="${p.n}"></i>`).join('');
   $('brk').innerHTML=parts.sort((a,b)=>b.y-a.y).map(p=>`<div><i class="dot" style="background:var(${p.c})"></i>${p.n}<span class="v">${fmt(p.y)}円/年</span><span class="p">${Math.round(p.y/year*100)}%</span></div>`).join('');
-  const txt=`うちの猫${cats>1?cats+'匹':''}にかかるお金、1か月 約${fmt(month)}円、1年で約${fmt(year)}円でした`;
-  $('shareText').textContent=txt;
-  const url=location.origin+location.pathname;
-  $('shTh').href='https://www.threads.net/intent/post?text='+encodeURIComponent(txt+'\n'+url);
-  $('shX').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(txt)+'&url='+encodeURIComponent(url);
+  // シェア用の文章（見出し＋1か月あたりの内訳）
+  const EMO={food:'🍚 ごはん',snack:'🍬 おやつ',toilet:'🚽 トイレまわり',goods:'🧶 爪とぎ・おもちゃ',ins:'🛡 ペット保険',care:'💉 ワクチン・健診',vet:'🏥 けが・病気',other:'🏨 そのほか'};
+  const who=cats>1?`うちの猫${cats}匹`:'うちの猫';
+  const lines=parts.slice().sort((a,b)=>b.y-a.y).map(p=>`${EMO[p.k]} ${fmt(p.y/12)}円`);
+  const txt=[`${who}にかかるお金を計算したら…`,`1年で 約${man(year)} でした😳`,`（1か月 約${fmt(month)}円）`,'',...lines,'（1か月あたり）','','#ねこまわり #猫のいる暮らし'].join('\n');
+  const top3=parts.slice().sort((a,b)=>b.y-a.y).slice(0,3).map(p=>`${EMO[p.k]}${fmt(p.y/12)}円`).join(' ');
+  setShare($('shareBox'),txt,'https://nekomawari.com/okane/',`${who}にかかるお金、1年で約${man(year)}でした😳（月 約${fmt(month)}円）${top3} #ねこまわり`);
+  markEx();
 }
-$('shCp').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('shareText').textContent+'\n'+location.origin+location.pathname);$('shCp').textContent='コピーしました'}catch(e){$('shCp').textContent='コピーできませんでした'}setTimeout(()=>$('shCp').textContent='文章をコピー',1800)});
 $('cats').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$('cats').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
   const v=+b.dataset.v; $('catsN').hidden=v<5; cats=v<5?v:Math.max(5,parseInt($('catsIn').value,10)||5); update()});
 $('catsIn').addEventListener('input',()=>{cats=Math.max(1,parseInt($('catsIn').value,10)||5);update()});
 update();
 </script>
+<!--tabbar--><nav class="tabbar" aria-label="メニュー"><a href="/" style="--c:var(--ink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>ホーム</span></a><a href="/gohan/" style="--c:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18a9 6 0 0 1-18 0z"/><circle cx="8" cy="9.5" r="1.3"/><circle cx="12" cy="8.5" r="1.3"/><circle cx="16" cy="9.5" r="1.3"/><path d="M7 21h10"/></svg><span>ごはん</span></a><a href="/kirikae/" style="--c:var(--kibble)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><span>切り替え</span></a><a href="/okane/" style="--c:var(--rose)" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 7.5 12 12l3.5-4.5"/><path d="M8.5 12.5h7M8.5 15.5h7M12 12v5.5"/></svg><span>お金</span></a><a href="/omocha/" style="--c:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21 14 10"/><path d="M14 10c1-4 4-6 7-6-0 3-2 6-6 7"/><path d="M15.5 8.5l2-2"/></svg><span>おもちゃ</span></a></nav><!--/tabbar-->
 </body>
 </html>

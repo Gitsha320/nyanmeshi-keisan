@@ -8,7 +8,7 @@
 - 楽天リンク：`public/index.html` の `SHOP` の `a8` に、A8.netの楽天ツール「任意ページへのリンク作成」で作ったURLを貼る
 
 ## ページ
-- `/` ごはんの量、`/kirikae/` フード切り替え表、`/okane/` 猫にかかるお金、`/omocha/` おもちゃの口コミ、`/about/` このサイトについて、`/kanri/` 口コミの管理（合言葉が必要・noindex）
+- `/` トップ（ツールの入口）、`/gohan/` ごはんの量、`/kirikae/` フード切り替え表、`/okane/` 猫にかかるお金、`/omocha/` おもちゃの口コミ、`/about/` このサイトについて、`/kanri/` 口コミの管理（合言葉が必要・noindex）
 - メニューとサイトマップ：`python3 tools/nav.py`
 - 楽天・Amazonの商品カード：`python3 tools/place.py`（楽天のコードは `tools/rakuten_items.json` に1文字も変えずに保存）
 - フードのカロリー一覧：`public/foods.js`（各メーカー公式ページで確認した値と出典URL）
@@ -16,3 +16,12 @@
 ## 口コミ（Cloudflare Pages Functions + D1）
 - API：`functions/api/reviews.js`（一覧・集計・投稿）、`report.js`（通報・3件で自動非表示）、`admin.js`（管理）。共通部品は `lib/omocha.js`（NGワードなど）
 - D1データベース `nyanmeshi`（`wrangler.jsonc` で `DB` として接続）。管理用の合言葉はハッシュにして `settings` テーブルに保存
+
+## おもちゃのリクエストとメール通知
+- `functions/api/request.js`：リクエストを D1 の `toy_requests` に保存し、`lib/omocha.js` の `notifyMail` で運営者にメール
+- メールは Cloudflare Email Service の REST API（Email Routing で確認済みの宛先へは無料）。Pages の設定でシークレット `EMAIL_API_TOKEN`（Email Sending: Edit）と `NOTIFY_TO` を入れる
+- 管理ページ `/kanri/` でリクエストの一覧・対応状況・テストメール
+
+## 共通の部品
+- `public/site.js`：例の値（data-ex）の表示、「計算する」ボタン、シェア
+- `tools/nav.py`：PCの上メニュー・スマホの下メニュー・フッター・アイコン（@@名前@@）・サイトマップ

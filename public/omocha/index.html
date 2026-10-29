@@ -21,8 +21,6 @@
 .filters .lbl{font-weight:800;font-size:13px;color:var(--sub)}
 .sortrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .toylist{display:flex;flex-direction:column;gap:12px}
-.toy{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px}
-.toy .top{display:grid;grid-template-columns:96px 1fr;gap:14px}
 .toy .ph{width:96px;height:96px;border-radius:12px;background:#fff;object-fit:contain;border:1px solid var(--line)}
 .toy .tp{display:inline-block;font-size:11.5px;font-weight:800;border-radius:6px;padding:1px 8px;margin-bottom:2px}
 .toy h3{font-size:16px}
@@ -40,7 +38,6 @@
 .acts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .acts a{font-weight:800;font-size:12.5px;text-decoration:none;border-radius:999px;padding:6px 12px;color:#fff}
 .acts .b-rak{background:#bf0000}.acts .b-amz{background:#232f3e}
-.open{appearance:none;border:1.5px solid var(--green);background:var(--green-soft);color:var(--green);font:800 13px var(--f-body);border-radius:999px;padding:6px 14px;cursor:pointer;margin-left:auto}
 .panel{border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:12px}
 .rv{background:var(--bg);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
 .rv .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
@@ -59,12 +56,30 @@
 .msg{font-size:13px;border-radius:10px;padding:6px 10px}
 .msg.ok{background:var(--green-soft)}.msg.ng{background:var(--rose-soft)}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.txt{width:100%;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:500 14px var(--f-body);color:var(--ink);background:var(--paper)}
+.txt:focus{outline:none;border-color:var(--green)}
+#request .form{border:0;padding:0}
+#request textarea{width:100%;min-height:72px;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:500 14px var(--f-body);color:var(--ink);background:var(--paper);resize:vertical}
 .empty{font-size:13.5px;color:var(--sub)}
 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .how div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px;color:var(--sub)}
 .how b{display:block;color:var(--ink);font-size:14px}
-@media (max-width:640px){.toy .top{grid-template-columns:72px 1fr}.toy .ph{width:72px;height:72px}.how{grid-template-columns:1fr}.open{margin-left:0}}
+
+.toy{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;grid-template-columns:96px 1fr 132px;grid-template-areas:"ph info shop" "open open shop" "panel panel panel";gap:10px 14px}
+.toy .ph{grid-area:ph;width:96px;height:96px;border-radius:12px;background:#fff;object-fit:contain;border:1px solid var(--line)}
+.toy .info{grid-area:info;min-width:0}
+.toy .open{grid-area:open;appearance:none;border:0;background:var(--green);color:var(--on-green);font:800 15px var(--f-body);border-radius:12px;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin:0}
+.toy .open svg{width:20px;height:20px}
+.toy .open[aria-expanded=true]{background:var(--bg);color:var(--ink)}
+.toy .shop{grid-area:shop;display:flex;flex-direction:column;gap:6px;align-self:start;border-left:1px dashed var(--line);padding-left:12px}
+.toy .shop .sh{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--sub);font-weight:700}
+.toy .shop a{font-weight:700;font-size:12.5px;text-decoration:none;border-radius:8px;padding:5px 10px;border:1.5px solid var(--line);color:var(--ink);background:var(--paper);text-align:center}
+.toy .shop a.s-rak{border-color:#bf0000;color:#bf0000}.toy .shop a.s-amz{border-color:#232f3e;color:#232f3e}
+.toy .panel{grid-area:panel}
+@media (max-width:640px){.toy{grid-template-columns:72px 1fr;grid-template-areas:"ph info" "open open" "shop shop" "panel panel"}.toy .ph{width:72px;height:72px}
+ .toy .shop{flex-direction:row;align-items:center;justify-content:flex-end;border-left:0;padding-left:0;flex-wrap:wrap}}
 </style>
+<script src="/site.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -76,31 +91,46 @@
       <p class="small muted">どんな猫が、どれくらい遊んだ？ 何日で飽きた？</p>
     </div>
   </header>
-  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/" aria-current="page"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
+  <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/gohan/"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/" aria-current="page"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
 
-  <div class="how">
-    <div><b>うちの子に近い猫で見る</b>年齢をえらぶと、その年の猫の「遊んだ度」で並びます。</div>
-    <div><b>飽きるまでの日数がわかる</b>色の帯で「その日だけ」〜「何か月も」の割合が見えます。</div>
-    <div><b>口コミは誰でも書ける</b>登録はいりません。ボタンを押して★と日数をえらぶだけ。</div>
+  <div class="intro">
+    <div class="ic"><span class="ico" style="background:var(--blue)"><!--ico:omocha--><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21 14 10"/><path d="M14 10c1-4 4-6 7-6-0 3-2 6-6 7"/><path d="M15.5 8.5l2-2"/></svg><!--/ico--></span><div><b>うちの子に近い猫で見る</b><p>年齢をえらぶと、その年ごろの猫の「遊んだ度」で並びかわります。</p></div></div>
+    <div class="ic"><span class="ico" style="background:var(--kibble)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 12h4M9 12h4M15 12h6"/><path d="M3 7h18M3 17h18" opacity=".4"/></svg></span><div><b>飽きるまでの日数がわかる</b><p>「その日だけ」〜「何か月も」の割合を色の帯で見られます。</p></div></div>
+    <div class="ic"><span class="ico" style="background:var(--rose)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></span><div><b>口コミもリクエストも</b><p>登録なしで口コミを書けます。リストにないおもちゃは、ページの下からリクエストできます。</p></div></div>
   </div>
+  <p class="flow"><span><i>1</i>しぼりこむ</span><em>→</em><span><i>2</i>口コミを見る</span><em>→</em><span><i>3</i>書く・リクエスト</span></p>
 
   <section class="card filters" aria-label="しぼりこみ">
+    <h2><span class="stepn">1</span>しぼりこむ</h2>
     <div><span class="lbl">猫の年齢</span>
       <div class="seg" id="fAge"><button type="button" data-v="" aria-pressed="true">すべて</button></div></div>
     <div><span class="lbl">おもちゃの種類</span>
       <div class="seg" id="fType"><button type="button" data-v="" aria-pressed="true">すべて</button></div></div>
-    <div class="sortrow"><span class="small muted" id="countNote">読みこみ中…</span>
+    <div class="sortrow"><span class="small muted"><span id="countNote">読みこみ中…</span>　<a href="#request">ないおもちゃをリクエスト</a></span>
       <div class="seg" id="fSort"><button type="button" data-v="stars" aria-pressed="true">遊んだ度が高い順</button><button type="button" data-v="n" aria-pressed="false">口コミが多い順</button></div></div>
   </section>
 
   <div class="toylist" id="list"></div>
+
+  <section class="card" id="request" aria-label="おもちゃのリクエスト">
+    <h2><span class="stepn" style="background:var(--rose)">＋</span>リストにないおもちゃをリクエスト</h2>
+    <p class="small muted" style="margin-top:-8px">「このおもちゃの口コミが見たい」「うちの子が気に入っているおもちゃを入れてほしい」などを送ってください。運営者が確認して、リストに追加します。</p>
+    <form id="rqf" class="form" novalidate>
+      <div class="field"><label class="lbl" for="rqName">おもちゃの名前 <span class="small muted">（必須）</span></label><input id="rqName" class="txt" maxlength="60" placeholder="例：猫壱 バリバリボウル" autocomplete="off"></div>
+      <div class="field"><label class="lbl" for="rqUrl">商品ページのURL <span class="small muted">（わかれば）</span></label><input id="rqUrl" class="txt" type="url" maxlength="500" placeholder="https://" inputmode="url" autocomplete="off"></div>
+      <div class="field"><label class="lbl" for="rqCm">ひとこと <span class="small muted">（なくてもOK・200字まで）</span></label><textarea id="rqCm" maxlength="200" placeholder="例：うちの子はこれで毎晩遊んでいます"></textarea></div>
+      <label class="hp">ウェブサイト<input id="rqHp" tabindex="-1" autocomplete="off"></label>
+      <button type="submit" class="send" id="rqBtn">リクエストを送る</button>
+      <p class="msg" id="rqMsg" hidden></p>
+    </form>
+  </section>
 
   <p class="small muted">口コミは、このページを見た人が書いたものです。運営者が内容を確かめたものではありません。おもちゃで遊ぶときは、誤って飲みこまないよう、ひもや小さな部品に気をつけて、遊んだあとは片づけてください。</p>
   <p class="pr-note" id="prnote"></p>
 
   <!--pxi--><img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=4BE9CS+98TDHE+2HOM+BWGDT" alt="" class="px"><!--/pxi-->
   <footer>
-    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
+    <!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ホーム</a><a href="/gohan/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav-->
     <p>このページには広告リンクが含まれます。</p>
   </footer>
 </div>
@@ -148,13 +178,14 @@ function render(){
     const dn=Object.values(s.days).reduce((a,b)=>a+b,0);
     const top=dn?Object.entries(s.days).sort((a,b)=>b[1]-a[1])[0][0]:'';
     const bar=dn?`<div class="days" role="img" aria-label="飽きるまでの日数の割合">${Object.entries(DAYS).map(([k,[,c]])=>s.days[k]?`<i style="width:${s.days[k]/dn*100}%;background:var(${c})"></i>`:'').join('')}</div><span class="small muted">飽きるまで：いちばん多いのは「${DAYS[top][0]}」</span>`:'';
-    return `<article class="toy" id="t-${t.id}"><div class="top">
-      <a href="${esc(it.url||'#')}" target="_blank" rel="nofollow sponsored noopener"><img class="ph" src="${esc((it.img||'').replace('_ex=64x64','_ex=128x128'))}" width="96" height="96" alt="" loading="lazy"></a>
-      <div><span class="tp" style="background:var(${tc});color:#fff">${tn}</span><h3>${esc(t.n)}</h3><p class="ds">${esc(t.d)}</p>
+    const shop=(it.url||t.a)?`<div class="shop"><span class="sh"><span class="pr-tag">PR</span>買えるお店</span>${it.url?`<a class="s-rak" href="${esc(it.url)}" target="_blank" rel="nofollow sponsored noopener">楽天市場</a>`:''}${t.a?`<a class="s-amz" href="https://www.amazon.co.jp/dp/${t.a}?tag=${AMAZON_TAG}" target="_blank" rel="nofollow sponsored noopener">Amazon</a>`:''}</div>`:'';
+    return `<article class="toy" id="t-${t.id}">
+      <img class="ph" src="${esc((it.img||'').replace('_ex=64x64','_ex=128x128'))}" width="96" height="96" alt="" loading="lazy">
+      <div class="info"><span class="tp" style="background:var(${tc});color:#fff">${tn}</span><h3>${esc(t.n)}</h3><p class="ds">${esc(t.d)}</p>
       <div class="score">${s.n?`${starHTML(s.avg)}<span class="avg">${s.avg.toFixed(1)}</span><span class="cnt">${s.n}件${fAge?'（'+AGES[fAge]+'）':''}</span>`:`<span class="cnt">${fAge&&s.all?AGES[fAge]+'の口コミはまだありません':'まだ口コミがありません'}</span>`}</div>
-      ${bar}</div></div>
-      <div class="acts">${it.url?`<a class="b-rak" href="${esc(it.url)}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a>`:''}${t.a?`<a class="b-amz" href="https://www.amazon.co.jp/dp/${t.a}?tag=${AMAZON_TAG}" target="_blank" rel="nofollow sponsored noopener">Amazonで見る</a>`:''}
-      <button type="button" class="open" data-id="${t.id}" aria-expanded="${openId===t.id}">${openId===t.id?'とじる':'口コミを見る・書く'}</button></div>
+      ${bar}</div>
+      <button type="button" class="open" data-id="${t.id}" aria-expanded="${openId===t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>${openId===t.id?'とじる':(s.n?'口コミを見る・書く':'最初の口コミを書く')}</button>
+      ${shop}
       ${openId===t.id?`<div class="panel" id="panel"></div>`:''}</article>`}).join('');
   if(openId)loadPanel(openId);
 }
@@ -202,9 +233,22 @@ async function report(b){
   try{await fetch('/api/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:+b.dataset.id})});b.textContent='通報しました';b.dataset.done=1}catch(e){}
 }
 async function loadSummary(){try{SUM=(await (await fetch('/api/reviews')).json()).summary||{}}catch(e){SUM={}}}
+
+// おもちゃのリクエスト
+$('rqf').addEventListener('submit',async e=>{e.preventDefault();const m=$('rqMsg');
+  const name=$('rqName').value.trim();
+  if(name.length<2){m.hidden=false;m.className='msg ng';m.textContent='おもちゃの名前を入れてください';return}
+  $('rqBtn').disabled=true;
+  try{const r=await fetch('/api/request',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({name,url:$('rqUrl').value.trim(),comment:$('rqCm').value,website:$('rqHp').value})});
+    const d=await r.json();
+    if(d.ok){m.hidden=false;m.className='msg ok';m.textContent='リクエストを送りました。ありがとうございます！ 追加したら、このページのリストに出てきます。';$('rqName').value='';$('rqUrl').value='';$('rqCm').value='';}
+    else{m.hidden=false;m.className='msg ng';m.textContent=d.message||'送れませんでした'}
+  }catch(err){m.hidden=false;m.className='msg ng';m.textContent='通信できませんでした。時間をおいてもう一度お願いします'}
+  $('rqBtn').disabled=false;});
 $('prnote').textContent='楽天市場・Amazonのリンクは広告です。Amazonのアソシエイトとして、ねこまわりは適格販売により収入を得ています。';
 (async()=>{await loadSummary();render();
   const h=location.hash.slice(1);if(h&&TOYS.some(t=>t.id===h)){openId=h;render();$('t-'+h).scrollIntoView({block:'start'})}})();
 </script>
+<!--tabbar--><nav class="tabbar" aria-label="メニュー"><a href="/" style="--c:var(--ink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>ホーム</span></a><a href="/gohan/" style="--c:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18a9 6 0 0 1-18 0z"/><circle cx="8" cy="9.5" r="1.3"/><circle cx="12" cy="8.5" r="1.3"/><circle cx="16" cy="9.5" r="1.3"/><path d="M7 21h10"/></svg><span>ごはん</span></a><a href="/kirikae/" style="--c:var(--kibble)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><span>切り替え</span></a><a href="/okane/" style="--c:var(--rose)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 7.5 12 12l3.5-4.5"/><path d="M8.5 12.5h7M8.5 15.5h7M12 12v5.5"/></svg><span>お金</span></a><a href="/omocha/" style="--c:var(--blue)" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21 14 10"/><path d="M14 10c1-4 4-6 7-6-0 3-2 6-6 7"/><path d="M15.5 8.5l2-2"/></svg><span>おもちゃ</span></a></nav><!--/tabbar-->
 </body>
 </html>

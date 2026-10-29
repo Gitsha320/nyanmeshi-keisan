@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="/style.css">
 <style>
 .rv{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:13.5px}
+.rv.done{opacity:.6}
 .rv.hid{border-color:var(--rose);background:var(--rose-soft)}
 .rv .m{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--sub)}
 .rv .b{display:flex;gap:6px}
@@ -23,6 +24,10 @@
   <p class="small muted">管理用の合言葉を入れると、通報された口コミや最近の口コミが見られます。合言葉はこのタブを閉じると消えます。</p>
   <div class="row"><input id="tk" type="password" placeholder="管理用の合言葉" autocomplete="off"><button class="go" id="go">見る</button></div>
   <p id="msg" class="small"></p>
+  <h2 style="font-size:17px">おもちゃのリクエスト <span id="rqCount" class="small muted"></span></h2>
+  <p class="small muted" id="mailState"></p>
+  <div id="rqList" style="display:flex;flex-direction:column;gap:8px"></div>
+  <h2 style="font-size:17px">口コミ</h2>
   <div id="list" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
 <script>
@@ -33,16 +38,23 @@ async function load(){
   const t=$('tk').value.trim();try{sessionStorage.setItem('nyan-admin',t)}catch(e){}
   const r=await fetch('/api/admin',{headers:{'x-admin-token':t}});
   if(r.status===401){$('msg').textContent='合言葉がちがいます';$('list').innerHTML='';return}
-  const d=await r.json();const rows=d.reviews||[];
+  const d=await r.json();const rows=d.reviews||[];const rq=d.requests||[];
+  const ST={new:'未対応',done:'追加した',skip:'見送り'};
+  $('rqCount').textContent=`（未対応 ${rq.filter(x=>x.status==='new').length}件）`;
+  $('mailState').innerHTML=d.mail?'メール通知：設定済み　<button class="go" id="testMail">テストメールを送る</button>':'メール通知：まだ設定されていません（リクエストはここにたまります）';
+  if(d.mail)$('testMail').onclick=async()=>{const t=await (await fetch('/api/admin',{method:'POST',headers:{'content-type':'application/json','x-admin-token':$('tk').value.trim()},body:JSON.stringify({action:'test-mail'})})).json();alert(t.ok?'送りました。メールを確認してください':'送れませんでした：'+JSON.stringify(t.errors||t.reason||t.status))};
+  $('rqList').innerHTML=rq.length?rq.map(x=>`<div class="rv ${x.status==='new'?'':'done'}"><div class="m"><b>#${x.id}</b><span>${ST[x.status]||x.status}</span><span>${new Date(x.created_at).toLocaleString('ja-JP')}</span><span>${x.mailed?'メール済み':''}</span></div>
+    <div><b>${esc(x.name)}</b></div>${x.url?`<div class="small"><a href="${esc(x.url)}" target="_blank" rel="noopener nofollow">${esc(x.url)}</a></div>`:''}${x.comment?`<div class="small">${esc(x.comment)}</div>`:''}
+    <div class="b"><button data-k="request" data-a="done" data-id="${x.id}">追加した</button><button data-k="request" data-a="skip" data-id="${x.id}">見送り</button><button data-k="request" data-a="new" data-id="${x.id}">未対応にもどす</button><button class="del" data-k="request" data-a="delete" data-id="${x.id}">削除</button></div></div>`).join(''):'<p class="small muted">まだリクエストはありません</p>';
   $('msg').textContent=`${rows.length}件（通報あり・非表示を先に表示）`;
   $('list').innerHTML=rows.map(x=>`<div class="rv ${x.hidden?'hid':''}"><div class="m"><b>#${x.id}</b><span>${esc(x.toy)}</span><span>★${x.stars}</span><span>${esc(x.age)}</span><span>${esc(x.traits)}</span><span>${esc(x.days)}</span><span>通報 ${x.reports}</span><span>${x.hidden?'非表示中':'表示中'}</span><span>${new Date(x.created_at).toLocaleString('ja-JP')}</span></div>
     <div>${esc(x.comment||'（コメントなし）')}</div>
     <div class="b">${x.hidden?`<button data-a="show" data-id="${x.id}">表示にもどす</button>`:`<button data-a="hide" data-id="${x.id}">非表示にする</button>`}<button class="del" data-a="delete" data-id="${x.id}">削除</button></div></div>`).join('');
 }
 $('go').addEventListener('click',load);
-$('list').addEventListener('click',async e=>{const b=e.target.closest('button[data-a]');if(!b)return;
+document.addEventListener('click',async e=>{const b=e.target.closest('button[data-a]');if(!b)return;
   if(b.dataset.a==='delete'&&!confirm('削除すると元にもどせません。削除しますか？'))return;
-  await fetch('/api/admin',{method:'POST',headers:{'content-type':'application/json','x-admin-token':$('tk').value.trim()},body:JSON.stringify({id:+b.dataset.id,action:b.dataset.a})});load();});
+  await fetch('/api/admin',{method:'POST',headers:{'content-type':'application/json','x-admin-token':$('tk').value.trim()},body:JSON.stringify({id:+b.dataset.id,action:b.dataset.a,kind:b.dataset.k||'review'})});load();});
 if($('tk').value)load();
 </script>
 </body>
