@@ -147,3 +147,25 @@ footer a{color:inherit}
 .src{font-size:11.5px;color:var(--sub)}
 .src a{color:inherit}
 .gnav a[aria-current=page] i{background:var(--on-green)!important}
+/* 多頭飼い */
+.catsbox{display:flex;flex-direction:column;gap:10px}
+.cat{border-radius:14px;background:var(--bg);padding:12px;display:flex;flex-direction:column;gap:10px}
+.cat .ch{display:flex;align-items:center;gap:8px}
+.cat .ch i{width:14px;height:14px;border-radius:50%;flex:none}
+.cat .cname{flex:1;min-width:0;border:2px solid var(--line);border-radius:10px;background:var(--paper);padding:5px 10px;font:800 14px var(--f-body);color:var(--ink)}
+.cat .cname:focus{outline:none;border-color:var(--green)}
+.cat .rm{appearance:none;border:0;background:none;color:var(--sub);font:500 12px var(--f-body);cursor:pointer;text-decoration:underline}
+.cat .box{background:var(--paper)}
+.addcat{appearance:none;border:1.5px dashed var(--green);background:transparent;color:var(--green);border-radius:12px;font:800 14px var(--f-body);padding:10px;cursor:pointer}
+.cups{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.cups figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.cups figure svg{width:170px;height:auto}
+.cups.many figure svg{width:96px}
+.cups figcaption{font-size:12px;font-weight:800;display:flex;align-items:center;gap:4px}
+.cups figcaption i{width:9px;height:9px;border-radius:50%}
+.percat{display:flex;flex-direction:column;gap:6px}
+.pc-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;font-size:14px;padding:8px 12px;border-radius:12px;background:var(--bg)}
+.pc-row .nm{display:flex;align-items:center;gap:8px;font-weight:800;min-width:0}
+.pc-row .nm i{width:10px;height:10px;border-radius:50%;flex:none}
+.pc-row b{font:700 16px var(--f-num)}
+.pc-row small{color:var(--sub);font-size:11.5px}

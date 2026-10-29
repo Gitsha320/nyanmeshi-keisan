@@ -6,8 +6,8 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="猫のごはんの量計算｜にゃん飯計算機">
 <meta property="og:description" content="猫の体重とキャットフードのカロリーから、1日の量と月のフード代がわかります。">
-<title>猫のごはんの量計算｜1日何グラム？月のフード代も にゃん飯計算機</title>
-<meta name="description" content="猫の体重とキャットフードのカロリーから、1日に必要なごはんの量（g）と、1袋が何日もつか、月のフード代がわかる計算機です。2つのフードの比較もできます。">
+<title>猫のごはんの量計算｜1日何グラム？月のフード代も・多頭飼い対応 にゃん飯計算機</title>
+<meta name="description" content="猫の体重とキャットフードのカロリーから、1日に必要なごはんの量（g）と、1袋が何日もつか、月のフード代がわかる計算機です。2匹・3匹の多頭飼いなら1匹ずつの量と合計も。人気フードは一覧から選べて、2つのフードの比較もできます。">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -27,35 +27,22 @@
     </span>
     <div>
       <h1>にゃん飯計算機</h1>
-      <p class="small muted">猫のごはん、1日何グラム？ 月のフード代もいっしょに計算します</p>
+      <p class="small muted">猫のごはん、1日何グラム？ 月のフード代もいっしょに計算します。多頭飼いも</p>
     </div>
   </header>
   <!--gnav--><nav class="gnav" aria-label="メニュー"><a href="/" aria-current="page"><i style="background:var(--green)"></i>ごはんの量</a><a href="/kirikae/"><i style="background:var(--kibble)"></i>フード切り替え</a><a href="/okane/"><i style="background:var(--rose)"></i>猫にかかるお金</a><a href="/omocha/"><i style="background:var(--blue)"></i>おもちゃの口コミ</a></nav><!--/gnav-->
 
   <section class="card" aria-label="猫のこと">
     <span class="example" id="exampleTag">はじめは例（体重4kg・避妊去勢済みの成猫）が入っています</span>
-    <div class="grid2">
-      <div class="field">
-        <label for="w">体重</label>
-        <div class="row"><input type="range" id="wRange" min="0.5" max="9" step="0.1" value="4" aria-label="体重スライダー"><div class="box"><input id="w" type="number" inputmode="decimal" min="0.3" max="15" step="0.1" value="4"><span>kg</span></div></div>
-      </div>
-      <div class="field">
-        <span class="lbl">ごはんの回数</span>
-        <div class="seg" id="meals">
-          <button type="button" data-v="1" aria-pressed="false">1回</button>
-          <button type="button" data-v="2" aria-pressed="true">2回</button>
-          <button type="button" data-v="3" aria-pressed="false">3回</button>
-          <button type="button" data-v="4" aria-pressed="false">4回</button>
-        </div>
-      </div>
-    </div>
+    <div id="catsBox" class="catsbox"></div>
+    <button type="button" class="addcat" id="addCat">＋ 猫をたす（多頭飼い）</button>
     <div class="field">
-      <span class="lbl">いまの状態</span>
-      <div class="seg" id="stage">
-        <button type="button" data-v="2.5" aria-pressed="false">子猫（1歳まで）</button>
-        <button type="button" data-v="1.2" aria-pressed="true">避妊・去勢済みの成猫</button>
-        <button type="button" data-v="1.4" aria-pressed="false">避妊・去勢していない成猫</button>
-        <button type="button" data-v="1.0" aria-pressed="false">太りやすい・あまり動かない</button>
+      <span class="lbl">ごはんの回数（1日）</span>
+      <div class="seg" id="meals">
+        <button type="button" data-v="1" aria-pressed="false">1回</button>
+        <button type="button" data-v="2" aria-pressed="true">2回</button>
+        <button type="button" data-v="3" aria-pressed="false">3回</button>
+        <button type="button" data-v="4" aria-pressed="false">4回</button>
       </div>
     </div>
   </section>
@@ -83,18 +70,16 @@
 
   <section class="card" aria-live="polite" aria-label="結果">
     <div class="result">
-      <div class="cupwrap">
-        <svg viewBox="0 0 170 190" role="img" aria-label="1回分の量を計量カップで表した図" id="cup"></svg>
-        <span class="small muted">1回分（<span id="cupName">いまのフード</span>）</span>
-      </div>
+      <div class="cupwrap"><div class="cups" id="cups"></div><span class="small muted">1回分（<span id="cupName">いまのフード</span>）</span></div>
       <div class="stats">
-        <div class="stat main"><span>1日のごはん（<span id="mainName">いまのフード</span>）</span><b class="num" id="gDay">63<small>g</small></b></div>
-        <div class="stat"><span>1回あたり</span><b class="num" id="gMeal">31<small>g</small></b></div>
-        <div class="stat"><span>1日に必要なカロリー</span><b class="num" id="kcalDay">238<small>kcal</small></b></div>
+        <div class="stat main"><span><span id="dayLbl">1日のごはん</span>（<span id="mainName">いまのフード</span>）</span><b class="num" id="gDay">63<small>g</small></b></div>
+        <div class="stat"><span id="mealLbl">1回あたり</span><b class="num" id="gMeal">31<small>g</small></b></div>
+        <div class="stat"><span id="kcalLbl">1日に必要なカロリー</span><b class="num" id="kcalDay">238<small>kcal</small></b></div>
         <div class="stat"><span>1袋がもつ日数</span><b class="num" id="days">32<small>日</small></b></div>
-        <div class="stat"><span>1か月のフード代</span><b class="num" id="month">2,860<small>円</small></b></div>
+        <div class="stat"><span id="monthLbl">1か月のフード代</span><b class="num" id="month">2,860<small>円</small></b></div>
       </div>
     </div>
+    <div class="percat" id="perCat" hidden></div>
     <div class="cmp" id="cmp">
       <h3 style="font-size:15px">1か月のフード代をくらべる</h3>
       <div id="cmpRows" style="display:flex;flex-direction:column;gap:12px"></div>
@@ -155,13 +140,37 @@ const SHOP=[
 ];
 
 const STAGES=[['子猫（1歳まで）',2.5],['避妊・去勢済みの成猫',1.2],['避妊・去勢していない成猫',1.4],['太りやすい・あまり動かない',1.0]];
+const CAT_COLORS=['--green','--kibble','--rose','--blue','--ink','--sub'];
 const $=id=>document.getElementById(id);
-let factor=1.2, meals=2, touched=false;
+let meals=2, touched=false;
 const fmt=n=>Math.round(n).toLocaleString('ja-JP');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rer=w=>70*Math.pow(w,0.75);
+// 猫の一覧（この端末に保存して、次に開いたときも使う）
+let CATS=[{name:'',w:4,f:1.2}];
+try{const s=JSON.parse(localStorage.getItem('nyanmeshi-cats')||'null');if(Array.isArray(s)&&s.length){CATS=s.slice(0,12);touched=true}}catch(e){}
+const catName=(c,i)=>c.name.trim()||(CATS.length>1?(i+1)+'匹目':'うちの猫');
 
 $('tbody').innerHTML=STAGES.map(([n,f])=>`<tr><td>${n}</td><td class="num">× ${f.toFixed(1)}</td><td class="num">${fmt(rer(4)*f)} kcal</td></tr>`).join('');
 $('shopLinks').innerHTML=SHOP.map((s,i)=>`<a ${i===0?'class="primary"':''} href="${s.a8||s.q}" target="_blank" rel="nofollow sponsored noopener">${s.label}</a>`).join('');
+
+function drawCats(){
+  $('catsBox').innerHTML=CATS.map((c,i)=>`<div class="cat" data-i="${i}">
+    <div class="ch"><i style="background:var(${CAT_COLORS[i%CAT_COLORS.length]})"></i><input class="cname" value="${esc(c.name)}" placeholder="${CATS.length>1?(i+1)+'匹目':'うちの猫'}（名前を入れてもOK）" aria-label="${i+1}匹目の名前" maxlength="12">${CATS.length>1?`<button type="button" class="rm">この子をはずす</button>`:''}</div>
+    <div class="field"><label>体重</label><div class="row"><input type="range" class="wr" min="0.5" max="9" step="0.1" value="${c.w}" aria-label="${i+1}匹目の体重スライダー"><div class="box"><input class="wn" type="number" inputmode="decimal" min="0.3" max="15" step="0.1" value="${c.w}"><span>kg</span></div></div></div>
+    <div class="field"><span class="lbl">いまの状態</span><div class="seg">${STAGES.map(([n,f])=>`<button type="button" data-v="${f}" aria-pressed="${c.f===f}">${n}</button>`).join('')}</div></div></div>`).join('');
+  $('addCat').hidden=CATS.length>=12;
+}
+$('catsBox').addEventListener('input',e=>{const el=e.target.closest('.cat');if(!el)return;const c=CATS[+el.dataset.i];
+  if(e.target.classList.contains('cname'))c.name=e.target.value;
+  if(e.target.classList.contains('wr')){c.w=parseFloat(e.target.value);el.querySelector('.wn').value=e.target.value}
+  if(e.target.classList.contains('wn')){c.w=parseFloat(e.target.value);if(e.target.value!=='')el.querySelector('.wr').value=e.target.value}
+  touched=true;update()});
+$('catsBox').addEventListener('click',e=>{const el=e.target.closest('.cat');if(!el)return;const i=+el.dataset.i;
+  if(e.target.closest('.rm')){CATS.splice(i,1);drawCats();touched=true;update();return}
+  const b=e.target.closest('.seg button');if(b){CATS[i].f=+b.dataset.v;el.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));touched=true;update()}});
+$('addCat').addEventListener('click',()=>{const last=CATS[CATS.length-1];CATS.push({name:'',w:last?last.w:4,f:last?last.f:1.2});drawCats();touched=true;update();
+  const els=$('catsBox').querySelectorAll('.cname');els[els.length-1].focus()});
 
 function food(k){
   const kcal=parseFloat($('kcal'+k).value), bag=parseFloat($('bag'+k).value), price=parseFloat($('price'+k).value);
@@ -173,7 +182,7 @@ function calc(f,need){
   const month=(f.bag>0&&f.price>=0)?f.price/f.bag*g*30.4:NaN;
   return {g,days,month};
 }
-function drawCup(g){
+function cupSVG(g,uid){
   // 計量カップ：めもり 0〜100g。1回分を塗る
   const max=100, top=28, bottom=168, h=bottom-top;
   const lvl=Math.min(g,max)/max;
@@ -183,39 +192,49 @@ function drawCup(g){
     ticks+=`<line x1="${big?118:124}" x2="132" y1="${ty}" y2="${ty}" stroke="var(--sub)" stroke-width="${big?1.6:1}"/>`;
     if(v%20===0)ticks+=`<text x="140" y="${ty+4}" font-size="11" font-family="JetBrains Mono,monospace" fill="var(--sub)">${v}</text>`;}
   const over=g>max?`<text x="70" y="20" text-anchor="middle" font-size="11" fill="var(--rose)" font-weight="700">100gをこえています</text>`:'';
-  $('cup').innerHTML=`
-    <defs><clipPath id="cupClip"><path d="M18 ${top} H122 L112 ${bottom} H28 Z"/></clipPath></defs>
+  return `<svg viewBox="0 0 170 190" role="img" aria-label="1回分 ${fmt(g)}g を計量カップで表した図">
+    <defs><clipPath id="cupClip${uid}"><path d="M18 ${top} H122 L112 ${bottom} H28 Z"/></clipPath></defs>
     <path d="M18 ${top} H122 L112 ${bottom} H28 Z" fill="var(--bg)" stroke="var(--line)" stroke-width="2"/>
-    <g clip-path="url(#cupClip)"><rect x="0" y="${y}" width="140" height="${bottom-y}" fill="var(--kibble)" opacity=".85"/>
+    <g clip-path="url(#cupClip${uid})"><rect x="0" y="${y}" width="140" height="${bottom-y}" fill="var(--kibble)" opacity=".85"/>
       ${Array.from({length:18},(_,i)=>`<circle cx="${26+(i*23)%90}" cy="${Math.min(bottom-6,y+8+((i*37)%Math.max(10,bottom-y)))}" r="5" fill="var(--kibble-ink)" opacity=".18"/>`).join('')}
     </g>
     <line x1="14" x2="126" y1="${y}" y2="${y}" stroke="var(--rose)" stroke-width="2" stroke-dasharray="4 3"/>
     <rect x="45" y="${Math.max(top+2,y-30)}" width="50" height="22" rx="6" fill="var(--paper)" stroke="var(--line)"/><text x="70" y="${Math.max(top+2,y-30)+16}" text-anchor="middle" font-size="14" font-weight="700" font-family="JetBrains Mono,monospace" fill="var(--ink)">${fmt(g)}g</text>
-    ${ticks}${over}`;
+    ${ticks}${over}</svg>`;
 }
 function update(){
-  const w=parseFloat($('w').value);
   const A=food('A'), B=food('B');
   $('warn').hidden=true;
-  if(!(w>0)||!A.ok){$('warn').hidden=false;$('warn').textContent='体重と、フードAのカロリーを入れてください。';return}
-  const need=rer(w)*factor;
-  const a=calc(A,need);
+  const ok=CATS.every(c=>c.w>0);
+  if(!ok||!A.ok){$('warn').hidden=false;$('warn').textContent='体重と、フードAのカロリーを入れてください。';return}
+  try{localStorage.setItem('nyanmeshi-cats',JSON.stringify(CATS))}catch(e){}
+  const per=CATS.map((c,i)=>{const need=rer(c.w)*c.f;return {c,i,need,g:need/A.kcal*100}});
+  const need=per.reduce((s,p)=>s+p.need,0);
+  const a=calc(A,need), many=CATS.length>1;
   $('mainName').textContent=A.name;$('cupName').textContent=A.name;
+  $('dayLbl').textContent=many?`1日のごはん（${CATS.length}匹の合計）`:'1日のごはん';
+  $('mealLbl').textContent=many?'1回あたり（合計）':'1回あたり';
+  $('kcalLbl').textContent=many?'1日に必要なカロリー（合計）':'1日に必要なカロリー';
+  $('monthLbl').textContent=many?`1か月のフード代（${CATS.length}匹分）`:'1か月のフード代';
   $('gDay').innerHTML=`${fmt(a.g)}<small>g</small>`;
   $('gMeal').innerHTML=`${fmt(a.g/meals)}<small>g</small>`;
   $('kcalDay').innerHTML=`${fmt(need)}<small>kcal</small>`;
   $('days').innerHTML=isNaN(a.days)?'—':`${fmt(a.days)}<small>日</small>`;
   $('month').innerHTML=isNaN(a.month)?'—':`${fmt(a.month)}<small>円</small>`;
-  drawCup(a.g/meals);
-  try{ if(!isNaN(a.month)) localStorage.setItem('nyanmeshi-month', JSON.stringify({yen:Math.round(a.month), name:A.name, at:Date.now()})); }catch(e){}
-  if(w>9||w<1)$('warn').hidden=false,$('warn').textContent=w<1?'とても小さい子猫は、1日に何回にも分けてあげます。量は獣医さんにも確認してください。':'体重が大きい場合、太りすぎのこともあります。ダイエットが必要かどうかは獣医さんに相談してください。';
+  $('cups').className='cups'+(many?' many':'');
+  $('cups').innerHTML=per.map(p=>`<figure>${cupSVG(p.g/meals,p.i)}${many?`<figcaption><i style="background:var(${CAT_COLORS[p.i%CAT_COLORS.length]})"></i>${esc(catName(p.c,p.i))}</figcaption>`:''}</figure>`).join('');
+  $('perCat').hidden=!many;
+  if(many)$('perCat').innerHTML=per.map(p=>`<div class="pc-row"><span class="nm"><i style="background:var(${CAT_COLORS[p.i%CAT_COLORS.length]})"></i>${esc(catName(p.c,p.i))}<small>${p.c.w}kg</small></span><span><small>1日</small> <b>${fmt(p.g)}g</b></span><span><small>1回</small> <b>${fmt(p.g/meals)}g</b></span></div>`).join('');
+  try{ if(!isNaN(a.month)) localStorage.setItem('nyanmeshi-month', JSON.stringify({yen:Math.round(a.month), cats:CATS.length, name:A.name, at:Date.now()})); }catch(e){}
+  const tiny=CATS.find(c=>c.w<1), big=CATS.find(c=>c.w>9);
+  if(tiny||big){$('warn').hidden=false;$('warn').textContent=tiny?'とても小さい子猫は、1日に何回にも分けてあげます。量は獣医さんにも確認してください。':'体重が大きい場合、太りすぎのこともあります。ダイエットが必要かどうかは獣医さんに相談してください。'}
 
   // 比較
   if(B.ok){
     const b=calc(B,need);
     const rows=[[A,a,'var(--green)'],[B,b,'var(--kibble)']];
     const mx=Math.max(a.month||0,b.month||0)||1;
-    $('cmpRows').innerHTML=rows.map(([f,r,c])=>`<div class="cmp-item"><div class="cmp-head"><span class="nm"><i class="dot" style="background:${c}"></i>${f.name}</span><span class="num">${isNaN(r.month)?'—':'月 '+fmt(r.month)+'円'}</span></div>
+    $('cmpRows').innerHTML=rows.map(([f,r,c])=>`<div class="cmp-item"><div class="cmp-head"><span class="nm"><i class="dot" style="background:${c}"></i>${esc(f.name)}</span><span class="num">${isNaN(r.month)?'—':'月 '+fmt(r.month)+'円'}</span></div>
       <div class="bar"><i style="width:${isNaN(r.month)?0:r.month/mx*100}%;background:${c}"></i></div>
       <span class="small muted">1日 ${fmt(r.g)}g ・ 1袋 ${isNaN(r.days)?'—':fmt(r.days)+'日'}</span></div>`).join('');
     if(!isNaN(a.month)&&!isNaN(b.month)){
@@ -238,10 +257,9 @@ function seg(id,cb){$(id).addEventListener('click',e=>{const b=e.target.closest(
     const f=FOODS[+v]; $('kcal'+k).value=f.k; $('name'+k).value=f.b+' '+f.n; touched=true; update();});
 });
 $('chk').textContent=FOODS_CHECKED;
-seg('stage',v=>factor=v);seg('meals',v=>meals=v);
-$('wRange').addEventListener('input',()=>{$('w').value=$('wRange').value;touched=true;update()});
-$('w').addEventListener('input',()=>{if($('w').value!=='')$('wRange').value=$('w').value;touched=true;update()});
+seg('meals',v=>meals=v);
 document.querySelectorAll('.food input').forEach(el=>el.addEventListener('input',()=>{touched=true;update()}));
+drawCats();
 update();
 </script>
 

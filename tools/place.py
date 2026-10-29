@@ -119,16 +119,16 @@ def main():
          '<p class="pr-h"><span class="pr-tag">PR</span>毎月のお金をおさえるなら</p>' + group('まとめ買いしやすいもの', '--kibble', [FOOD[0], EXTRA[0]]) +
          group('長く使えるもの', '--green', [TOOLS[1], TOOLS[3]]) + pxi + note)
     # 4) おもちゃ口コミ：ページのJSに楽天リンクを入れる
-    of = os.path.join(PUB, 'omocha/index.html')
-    if os.path.exists(of):
+    for of in [os.path.join(PUB, 'omocha/index.html'), os.path.join(PUB, 'okane/index.html')]:
+      if os.path.exists(of):
         t = open(of, encoding='utf-8').read()
         ids = re.findall(r"\br:'([a-z0-9-]+:[0-9]+)'", t)
-        data = {i: {'url': ITEMS[i]['url'], 'img': ITEMS[i]['img']} for i in ids}
+        data = {i: {'url': ITEMS[i]['url'], 'img': ITEMS[i]['img'], 'price': ITEMS[i]['price'], 'at': ITEMS[i]['at']} for i in ids}
         t = re.sub(r'/\*ritems\*/.*?/\*/ritems\*/', lambda m: '/*ritems*/' + json.dumps(data, ensure_ascii=False) + '/*/ritems*/', t, flags=re.S)
         if '<!--pxi-->' not in t:
             t = t.replace('  <footer>', f'  <!--pxi-->{pxi}<!--/pxi-->\n  <footer>', 1)
         open(of, 'w', encoding='utf-8').write(t)
-        print('fill omocha', len(data))
+        print('fill ritems', of.split('/')[-2], len(data))
     print('ok amazon=', AMAZON_ON)
 
 if __name__ == '__main__':
