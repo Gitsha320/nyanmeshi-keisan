@@ -15,6 +15,16 @@
 <link rel="stylesheet" href="/style.css">
 <style>.doc h2{font-size:16px;margin-top:6px}.doc p,.doc li{font-size:14px}.doc ul{margin:0;padding-left:1.2em}</style>
 <script src="/site.js"></script>
+<style>
+.cform{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.cform .lbl{font-weight:800;font-size:13px;color:var(--sub);margin-top:6px}
+.cform textarea,.cform input{width:100%;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:500 16px var(--f-body);color:var(--ink);background:var(--paper)}
+.cform textarea:focus,.cform input:focus{outline:none;border-color:var(--green)}
+.cform button{align-self:flex-start;margin-top:8px;appearance:none;border:0;border-radius:12px;background:var(--green);color:var(--on-green);font:800 14.5px var(--f-body);padding:10px 22px;cursor:pointer}
+.cform button:disabled{opacity:.5}
+.cform .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.cform .msg{font-size:13px;border-radius:10px;padding:6px 10px;margin:0}.cform .msg.ok{background:var(--green-soft)}.cform .msg.ng{background:var(--rose-soft)}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -37,6 +47,7 @@
     <ul>
       <li><b>口コミを投稿したとき：</b>投稿内容（評価・猫の年齢や性格・コメント）と日時を保存します。連続投稿や荒らしを防ぐため、接続元のIPアドレスを、元に戻せない形（ハッシュ値）にして保存します。IPアドレスそのものは保存しません。</li>
       <li><b>おもちゃをリクエストしたとき：</b>おもちゃの名前・URL・ひとことと日時を保存し、運営者にメールで知らせます。連続送信を防ぐため、IPアドレスを元に戻せない形（ハッシュ値）にして保存します。</li>
+      <li><b>お問い合わせを送ったとき：</b>内容と日時、返信先のメールアドレス（入れたときだけ）を保存し、運営者にメールで知らせます。メールアドレスは返信のためだけに使い、ほかの目的には使いません。連続送信を防ぐため、IPアドレスを元に戻せない形（ハッシュ値）にして保存します。</li>
       <li><b>計算の入力：</b>ごはんの量などの計算は、使っている端末（ブラウザ）の中だけでおこないます。「ごはんの量」で出した月のフード代は、「猫にかかるお金」で使えるよう、端末の中（localStorage）に保存します。</li>
       <li><b>広告：</b>このサイトは、楽天市場（A8.netを通じたプログラム）とAmazonアソシエイト・プログラムのリンクを使っています。リンク先で商品が買われると、運営者に紹介料が入ることがあります。これらの事業者がCookieを使うことがあります。Amazonのアソシエイトとして、ねこまわりは適格販売により収入を得ています。</li>
       <li><b>サーバー：</b>サイトはCloudflareを使って公開しています。</li>
@@ -44,10 +55,29 @@
     <h2>計算の結果について</h2>
     <p>このサイトの計算はおおよその目安です。猫の体調・持病・体型によって、必要な量やお金は変わります。気になることがあるときは、獣医さんに相談してください。</p>
     <h2>お問い合わせ・削除のご依頼</h2>
-    <p>口コミの削除は、口コミの「通報」ボタンからお知らせください。そのほかのお問い合わせは、Threads（<a href="https://www.threads.com/@nekonote_lab_" target="_blank" rel="noopener">@nekonote_lab_</a>）のDMで受け付けています。</p>
+    <p>口コミの削除は、口コミの「通報」ボタンからお知らせください。そのほかのお問い合わせは、下のフォームから送ってください。返信が必要なときは、メールアドレスを入れてください（返信のためだけに使います）。</p>
+    <form id="cf" class="cform" novalidate>
+      <label class="lbl" for="cfMsg">お問い合わせの内容 <span class="small muted">（1000字まで）</span></label>
+      <textarea id="cfMsg" maxlength="1000" rows="5"></textarea>
+      <label class="lbl" for="cfMail">返信先のメールアドレス <span class="small muted">（返信がいるときだけ）</span></label>
+      <input id="cfMail" type="email" maxlength="200" autocomplete="email" inputmode="email">
+      <label class="hp">ウェブサイト<input id="cfHp" tabindex="-1" autocomplete="off"></label>
+      <button type="submit" id="cfBtn">送る</button>
+      <p class="msg" id="cfMsgOut" hidden></p>
+    </form>
   </section>
   <footer><!--fnav--><nav class="fnav" aria-label="サイトの中のページ"><a href="/">ホーム</a><a href="/gohan/">ごはんの量</a><a href="/kirikae/">フード切り替え</a><a href="/okane/">猫にかかるお金</a><a href="/omocha/">おもちゃの口コミ</a><a href="/food/">フードの口コミ</a><a href="/about/">このサイトについて</a></nav><!--/fnav--></footer>
 </div>
 <!--tabbar--><nav class="tabbar" aria-label="メニュー"><a href="/" style="--c:var(--ink)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/></svg><span>ホーム</span></a><a href="/gohan/" style="--c:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18a9 6 0 0 1-18 0z"/><circle cx="8" cy="9.5" r="1.3"/><circle cx="12" cy="8.5" r="1.3"/><circle cx="16" cy="9.5" r="1.3"/><path d="M7 21h10"/></svg><span>ごはん</span></a><a href="/kirikae/" style="--c:var(--kibble)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></svg><span>切り替え</span></a><a href="/okane/" style="--c:var(--rose)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 7.5 12 12l3.5-4.5"/><path d="M8.5 12.5h7M8.5 15.5h7M12 12v5.5"/></svg><span>お金</span></a><a href="/omocha/" style="--c:var(--blue)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21 14 10"/><path d="M14 10c1-4 4-6 7-6-0 3-2 6-6 7"/><path d="M15.5 8.5l2-2"/></svg><span>おもちゃ</span></a><a href="/food/" style="--c:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><circle cx="9" cy="10.5" r="1"/><circle cx="12" cy="9.5" r="1"/><circle cx="15" cy="10.5" r="1"/></svg><span>フード</span></a></nav><!--/tabbar-->
+<script>
+document.getElementById('cf').addEventListener('submit',async e=>{e.preventDefault();const $=id=>document.getElementById(id);const m=$('cfMsgOut');const msg=$('cfMsg').value.trim();
+  if(msg.length<5){m.hidden=false;m.className='msg ng';m.textContent='お問い合わせの内容を入れてください';return}
+  $('cfBtn').disabled=true;
+  try{const r=await fetch('/api/contact',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message:msg,reply:$('cfMail').value.trim(),website:$('cfHp').value})});const d=await r.json();
+    if(d.ok){m.hidden=false;m.className='msg ok';m.textContent='送りました。ありがとうございます！';$('cfMsg').value='';$('cfMail').value='';}
+    else{m.hidden=false;m.className='msg ng';m.textContent=d.message||'送れませんでした'}}
+  catch(err){m.hidden=false;m.className='msg ng';m.textContent='通信できませんでした。時間をおいてもう一度お願いします'}
+  $('cfBtn').disabled=false;});
+</script>
 </body>
 </html>
