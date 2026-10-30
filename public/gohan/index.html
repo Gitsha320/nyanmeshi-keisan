@@ -279,7 +279,9 @@ function seg(id,cb){$(id).addEventListener('click',e=>{const b=e.target.closest(
 ['A','B'].forEach(k=>{
   const sel=$('sel'+k); fillFoodSelect(sel, k==='A'?'いまのフードを一覧から選ぶ':'くらべたいフードを一覧から選ぶ');
   sel.addEventListener('change',()=>{const v=sel.value; if(v===''||v==='other'){ if(v==='other'){$('kcal'+k).focus();} return; }
-    const f=FOODS[+v]; $('kcal'+k).value=f.k; unEx($('kcal'+k)); $('name'+k).value=f.b+' '+f.n; touched=true; update();});
+    const f=FOODS[+v]; $('name'+k).value=f.b+' '+f.n; touched=true;
+    if(!f.k){const inp=$('kcal'+k); inp.value=''; unEx(inp); inp.placeholder='袋のカロリー'; inp.focus(); update(); return;}
+    $('kcal'+k).value=f.k; unEx($('kcal'+k)); update();});
 });
 $('chk').textContent=FOODS_CHECKED;
 seg('meals',v=>meals=v);

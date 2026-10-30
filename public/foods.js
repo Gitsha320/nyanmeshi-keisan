@@ -2,6 +2,7 @@
   人気のドライフードのカロリー（代謝エネルギー・100gあたり）
   2026年10月29日・30日に、各メーカーの公式ページ（tamaは公式ショップ）で確認した値。
   商品のリニューアルで変わることがあるので、袋の表示も見てもらう。
+  k:null は公式ページでカロリーを確かめられなかったもの。選ぶとカロリー欄を空にして、袋の数字を入れてもらう。
 */
 window.FOODS_CHECKED = '2026年10月30日';
 window.FOODS = [
@@ -101,6 +102,18 @@ window.FOODS = [
   {b:'ニュートロ シュプレモ', n:'成猫用 白身魚＆チキン', k:365, t:'adult', u:'https://nutro.jp/products/supremo_c_adult_whitefish_chicken'},
   {b:'tama', n:'ボナペティ チキン＆シュリンプ', k:333, t:'neuter', u:'https://item.rakuten.co.jp/tamaone/tac0100280-2500g/'},
   {b:'tama', n:'ボナペティ サーモン＆クリル', k:332, t:'neuter', u:'https://item.rakuten.co.jp/tamaone/tac0100380-2500g/'},
+  {b:'オールウェル', n:'室内猫用 チキン味', k:340, t:'adult', u:'https://jp.unicharmpet.com/ja/products/cat/food-allwell-4520699648940.html'},
+  {b:'アイムス', n:'成猫用 インドアキャット チキン', k:null, t:'adult', u:''},
+  {b:'メディファス', n:'1歳から チキン味', k:null, t:'adult', u:''},
+  {b:'カナガン', n:'キャットフード チキン', k:405, t:'adult', u:'https://www.canagancatfood.co.jp/cart'},
+  {b:'モグニャン', n:'キャットフード', k:null, t:'adult', u:''},
+  {b:'ジャガー', n:'キャットフード', k:null, t:'adult', u:''},
+  {b:'オリジン', n:'オリジナルキャット', k:416, t:'adult', u:'https://acana.net/products/orijen-original-cat'},
+  {b:'アカナ', n:'ワイルドプレイリー キャット', k:393, t:'adult', u:'https://acana.net/products/wild-prairie-cats'},
+  {b:'ナウフレッシュ', n:'グレインフリー アダルトキャット', k:null, t:'adult', u:''},
+  {b:'ブリスミックス', n:'キャット チキン', k:null, t:'adult', u:''},
+  {b:'ロータス', n:'キャット グレインフリー フィッシュレシピ', k:null, t:'adult', u:''},
+  {b:'ファインペッツ', n:'キャットフード 極', k:null, t:'adult', u:''},
 ];
 window.FOOD_TAGS = {kitten:'子猫用', adult:'成猫用', neuter:'避妊・去勢後', diet:'体重が気になる', senior:'シニア'};
 
@@ -110,7 +123,7 @@ window.fillFoodSelect = function(sel, placeholder){
   FOODS.forEach((f,i)=>{(groups[f.b] = groups[f.b] || []).push([f,i]);});
   let h = `<option value="">${placeholder||'フードを選ぶ'}</option>`;
   for (const b in groups){
-    h += `<optgroup label="${b}">` + groups[b].map(([f,i])=>`<option value="${i}">${f.n}（${f.k}kcal）</option>`).join('') + '</optgroup>';
+    h += `<optgroup label="${b}">` + groups[b].map(([f,i])=>`<option value="${i}">${f.n}（${f.k?f.k+'kcal':'カロリーは袋を見て入力'}）</option>`).join('') + '</optgroup>';
   }
   h += '<option value="other">その他（カロリーを自分で入れる）</option>';
   sel.innerHTML = h;

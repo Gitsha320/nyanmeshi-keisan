@@ -194,8 +194,11 @@ $('selO').value=iO; $('selN').value=iN; nameO=FOODS[iO].b+' '+FOODS[iO].n; nameN
 [['O','selO','kO'],['N','selN','kN']].forEach(([k,s,i])=>{
   $(s).addEventListener('change',()=>{const v=$(s).value;
     if(v===''||v==='other'){ if(k==='O')nameO='いまのフード'; else nameN='新しいフード'; if(v==='other')$(i).focus(); update(); return; }
-    const f=FOODS[+v]; $(i).value=f.k; unEx($(i)); if(k==='O')nameO=f.b+' '+f.n; else nameN=f.b+' '+f.n; update();});
-  $(i).addEventListener('input',()=>{$(s).value='other'; unEx($(s)); if(k==='O')nameO='いまのフード'; else nameN='新しいフード'; update();});
+    const f=FOODS[+v]; if(k==='O')nameO=f.b+' '+f.n; else nameN=f.b+' '+f.n;
+    if(!f.k){$(i).value=''; unEx($(i)); $(i).placeholder='袋のカロリー'; $(i).focus(); update(); return;}
+    $(i).value=f.k; unEx($(i)); update();});
+  $(i).addEventListener('input',()=>{const cur=FOODS[+$(s).value]; if(cur&&!cur.k){update();return}
+    $(s).value='other'; unEx($(s)); if(k==='O')nameO='いまのフード'; else nameN='新しいフード'; update();});
 });
 const today=new Date(); $('start').value=today.toISOString().slice(0,10);
 $('start').addEventListener('input',update);
