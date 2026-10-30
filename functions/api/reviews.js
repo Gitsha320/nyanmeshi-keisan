@@ -8,13 +8,20 @@ export async function onRequestGet({ request, env }) {
   if (toy) {
     if (!TOYS.includes(toy) && !FOODS.includes(toy)) return json({ error: 'toy' }, 400);
     const { results } = await env.DB.prepare(
-      'SELECT id, age, traits, stars, days, comment, created_at FROM reviews WHERE toy=? AND hidden=0 ORDER BY created_at DESC LIMIT 100'
+      'SELECT id, age, traits, stars, days, comment, created_at, helpful FROM reviews WHERE toy=? AND hidden=0 ORDER BY helpful DESC, created_at DESC LIMIT 100'
     ).bind(toy).all();
     return json({ reviews: results });
   }
   const { results } = await env.DB.prepare(
-    'SELECT toy, age, stars, days FROM reviews WHERE hidden=0'
+    'SELECT id, toy, age, traits, stars, days, comment, created_at, helpful FROM reviews WHERE hidden=0 ORDER BY helpful DESC, created_at DESC'
   ).all();
+  // 「参考になった」が多い口コミを、おもちゃ・フードごとに2件まで（ひとことがあるものだけ）
+  const top = {};
+  for (const r of results) {
+    if (!r.comment || !r.helpful) continue;
+    const t = top[r.toy] = top[r.toy] || [];
+    if (t.length < 2) t.push({ id: r.id, age: r.age, traits: r.traits, stars: r.stars, days: r.days, comment: r.comment, created_at: r.created_at, helpful: r.helpful });
+  }
   const sum = {};
   for (const r of results) {
     const s = sum[r.toy] = sum[r.toy] || { n: 0, total: 0, byAge: {}, days: {} };
@@ -23,7 +30,7 @@ export async function onRequestGet({ request, env }) {
     a.n++; a.total += r.stars;
     s.days[r.days] = (s.days[r.days] || 0) + 1;
   }
-  return json({ summary: sum });
+  return json({ summary: sum, top });
 }
 
 // POST /api/reviews  {toy, age, traits[], stars, days, comment, website(=空のはず)}

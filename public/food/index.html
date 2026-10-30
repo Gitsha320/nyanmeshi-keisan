@@ -19,6 +19,10 @@
 <style>
 .filters{display:flex;flex-direction:column;gap:10px}
 .filters .lbl{font-weight:800;font-size:13px;color:var(--sub)}
+.qin{position:relative;margin-top:4px}.qin svg{position:absolute;left:12px;top:50%;width:18px;height:18px;transform:translateY(-50%);color:var(--sub)}
+.qin .txt{padding-left:38px;padding-right:38px;font-size:16px}
+.qin button{position:absolute;right:6px;top:50%;transform:translateY(-50%);appearance:none;border:0;background:var(--bg);color:var(--sub);width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer}
+.noq{background:var(--paper);border:1px dashed var(--line);border-radius:14px;padding:14px;font-size:14px}
 .sortrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .toylist{display:flex;flex-direction:column;gap:12px}
 .toy .ph{width:96px;height:96px;border-radius:12px;background:#fff;object-fit:contain;border:1px solid var(--line)}
@@ -67,7 +71,7 @@
 .how div{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px;color:var(--sub)}
 .how b{display:block;color:var(--ink);font-size:14px}
 
-.toy{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;grid-template-columns:96px 1fr 132px;grid-template-areas:"ph info shop" "open open shop" "panel panel panel";gap:10px 14px}
+.toy{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;display:grid;grid-template-columns:96px 1fr 132px;grid-template-areas:"ph info shop" "pk pk shop" "open open shop" "panel panel panel";gap:10px 14px}
 .toy .ph{grid-area:ph;display:grid;place-items:center;width:96px;height:96px;border-radius:12px;background:#fff;object-fit:contain;border:1px solid var(--line)}
 .toy .info{grid-area:info;min-width:0}
 .toy .open{grid-area:open;appearance:none;border:0;background:var(--green);color:var(--on-green);font:800 15px var(--f-body);border-radius:12px;padding:11px 14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin:0}
@@ -78,7 +82,14 @@
 .toy .shop a{font-weight:700;font-size:12.5px;text-decoration:none;border-radius:8px;padding:5px 10px;border:1.5px solid var(--line);color:var(--ink);background:var(--paper);text-align:center}
 .toy .shop a.s-rak{border-color:#bf0000;color:#bf0000}.toy .shop a.s-amz{border-color:#232f3e;color:#232f3e}
 .toy .panel{grid-area:panel}
-@media (max-width:640px){.toy{grid-template-columns:72px 1fr;grid-template-areas:"ph info" "open open" "shop shop" "panel panel"}.toy .ph{width:72px;height:72px}
+.toy .tops{grid-area:pk;display:flex;flex-direction:column;gap:8px}
+.toy .tops .th2{font-size:12px;font-weight:800;color:var(--sub);display:flex;align-items:center;gap:6px}
+.hl{appearance:none;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font:700 12px var(--f-body);border-radius:999px;padding:3px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;align-self:flex-start}
+.hl:hover{border-color:var(--green)}
+.hl.on{background:var(--green-soft);border-color:var(--green);color:var(--ink);cursor:default}
+.hl b{font-family:var(--f-num)}
+.rv .ft{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+@media (max-width:640px){.toy{grid-template-columns:72px 1fr;grid-template-areas:"ph info" "pk pk" "open open" "shop shop" "panel panel"}.toy .ph{width:72px;height:72px}
  .toy .shop{flex-direction:row;align-items:center;justify-content:flex-end;border-left:0;padding-left:0;flex-wrap:wrap}}
 </style>
 <script src="/site.js"></script>
@@ -104,6 +115,7 @@
 
   <section class="card filters" aria-label="しぼりこみ">
     <h2><span class="stepn">1</span>しぼりこむ</h2>
+    <div class="qbox"><label class="lbl" for="fQ">フードの名前でさがす</label><div class="qin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="fQ" class="txt" type="search" placeholder="例：tama、チキン、モグニャン" autocomplete="off" enterkeyhint="search"><button type="button" id="fQx" aria-label="けす" hidden>×</button></div></div>
     <div><span class="lbl">猫の年齢</span>
       <div class="seg" id="fAge"><button type="button" data-v="" aria-pressed="true">すべて</button></div></div>
     <div><span class="lbl">フードのタイプ</span>
@@ -175,15 +187,26 @@ const TOYS=[
  {id:'f-lotus',g:'natural',t:'adult',b:'ロータス',n:'キャット グレインフリー フィッシュレシピ',d:'オーブンで焼いたドライフード',r:'',a:''},
  {id:'f-finepets',g:'natural',t:'adult',b:'ファインペッツ',n:'キャットフード 極',d:'国内の通販ブランド',r:'',a:''},
  {id:'f-tama',g:'natural',t:'neuter',b:'tama',n:'ボナペティ ラム＆フィッシュ',d:'グレインフリー。避妊・去勢後にも',r:'tamaone:10000183',a:'B0DT44V818'},
+ {id:'f-tama-chicken',g:'natural',t:'neuter',b:'tama',n:'ボナペティ チキン＆シュリンプ',d:'グレインフリー。避妊・去勢後にも',r:'',a:''},
+ {id:'f-tama-salmon',g:'natural',t:'neuter',b:'tama',n:'ボナペティ サーモン＆クリル',d:'グレインフリー。避妊・去勢後にも',r:'',a:''},
+ {id:'f-one-indoor-st',g:'teiban',t:'adult',b:'ピュリナ ワン',n:'インドアキャット サーモン＆ツナ',d:'室内で暮らす成猫用',r:'',a:''},
+ {id:'f-one-gf',g:'teiban',t:'adult',b:'ピュリナ ワン',n:'グレインフリー チキン',d:'穀物を使っていない成猫用',r:'',a:''},
+ {id:'f-ginspoon-kaoru',g:'teiban',t:'adult',b:'銀のスプーン',n:'三ツ星グルメ 香るお魚仕立て',d:'お魚の味の成猫用',r:'',a:''},
+ {id:'f-nc-salmon',g:'natural',t:'adult',b:'ニュートロ ナチュラルチョイス',n:'室内猫用 アダルト サーモン',d:'サーモンが主原料の成猫用',r:'',a:''},
+ {id:'f-wild-salmon',g:'natural',t:'adult',b:'ニュートロ ワイルドレシピ',n:'アダルト サーモン',d:'サーモンを使ったグレインフリー',r:'',a:''},
+ {id:'f-wild-kitten',g:'natural',t:'kitten',b:'ニュートロ ワイルドレシピ',n:'キトン チキン',d:'子猫用のグレインフリー',r:'',a:''},
 ];
 const AGES={kitten:'子猫（1歳まで）',young:'1〜3歳',adult:'4〜10歳',senior:'11歳以上'};
 const TRAITS={picky:'好き嫌いが多い',weight:'体重が気になる',hairball:'毛玉が気になる',urinary:'おしっこが気になる',tummy:'おなかがゆるくなりやすい',multi:'多頭飼い'};
 const DAYS={d1:['ほぼ食べなかった','--rose'],w1:['1週間くらいで飽きた','--kibble'],m1:['1か月くらい続いた','--blue'],long:['何か月も続いてる','--green'],still:['食べはじめたばかり','--line']};
-let fAge='', fType='', fSort='stars', SUM={}, openId=null;
+let fQ='', fAge='', fType='', fSort='stars', SUM={}, TOP={}, openId=null;
 
 $('fAge').innerHTML+=Object.entries(AGES).map(([k,v])=>`<button type="button" data-v="${k}" aria-pressed="false">${v}</button>`).join('');
 $('fType').innerHTML+=Object.entries(TYPES).map(([k,[v]])=>`<button type="button" data-v="${k}" aria-pressed="false">${v}</button>`).join('');
 function seg(id,cb){$(id).addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(b.dataset.v);render()})}
+const norm=x=>String(x).normalize('NFKC').toLowerCase().replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60)).replace(/[\s・＆&()（）ー〜~-]/g,'');
+$('fQ').addEventListener('input',()=>{fQ=$('fQ').value;$('fQx').hidden=!fQ;render()});
+$('fQx').addEventListener('click',()=>{$('fQ').value='';fQ='';$('fQx').hidden=true;render();$('fQ').focus()});
 seg('fAge',v=>fAge=v);seg('fType',v=>fType=v);seg('fSort',v=>fSort=v);
 
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -193,10 +216,12 @@ function stat(id){const s=SUM[id];if(!s)return {n:0,avg:0,days:{}};
   return {n:s.n,avg:s.total/s.n,days:s.days}}
 function bowl(g){const c=g==='natural'?'var(--green)':'var(--blue)';return `<svg viewBox="0 0 64 64" width="56" height="56"><path d="M8 30h48a24 16 0 0 1-48 0z" fill="${c}"/><circle cx="22" cy="26" r="4" fill="var(--kibble)"/><circle cx="31" cy="23" r="4" fill="var(--kibble)"/><circle cx="40" cy="26" r="4" fill="var(--kibble)"/><path d="M18 52h28" stroke="${c}" stroke-width="4" stroke-linecap="round"/></svg>`}
 function render(){
-  let list=TOYS.filter(t=>!fType||t.g===fType||t.t===fType||(fType==='neuter'&&t.t==='diet')).map(t=>({...t,s:stat(t.id)}));
+  const qs=String(fQ).normalize('NFKC').split(/\s+/).map(norm).filter(Boolean);
+  let list=TOYS.filter(t=>{const h=norm([t.b||'',t.n,t.d].join(''));return qs.every(q=>h.includes(q))}).filter(t=>!fType||t.g===fType||t.t===fType||(fType==='neuter'&&t.t==='diet')).map(t=>({...t,s:stat(t.id)}));
   list.sort((a,b)=>fSort==='n'?(b.s.n-a.s.n)||(b.s.avg-a.s.avg):(b.s.avg-a.s.avg)||(b.s.n-a.s.n));
   const total=TOYS.reduce((x,t)=>x+(SUM[t.id]?SUM[t.id].n:0),0);
   $('countNote').textContent=`${list.length}このフード・口コミ${total}件${fAge?'（'+AGES[fAge]+'の猫の評価で表示）':''}`;
+  if(!list.length){$('list').innerHTML=`<p class="noq">「${esc(fQ)}」に合うものが見つかりませんでした。<a href="#request">リクエスト</a>してもらえれば、リストに追加します。</p>`;return}
   $('list').innerHTML=list.map(t=>{const it=RITEMS[t.r]||{};const [tn,tc]=GROUP[t.g];const s=t.s;
     const dn=Object.values(s.days).reduce((a,b)=>a+b,0);
     const top=dn?Object.entries(s.days).sort((a,b)=>b[1]-a[1])[0][0]:'';
@@ -207,21 +232,29 @@ function render(){
       <div class="info"><span class="tp" style="background:var(${tc});color:#fff">${tn}</span><span class="tp tg">${TAG[t.t]}</span><h3><small class="bn">${esc(t.b)}</small>${esc(t.n)}</h3><p class="ds">${esc(t.d)}</p>
       <div class="score">${s.n?`${starHTML(s.avg)}<span class="avg">${s.avg.toFixed(1)}</span><span class="cnt">${s.n}件${fAge?'（'+AGES[fAge]+'）':''}</span>`:`<span class="cnt">${fAge&&s.all?AGES[fAge]+'の口コミはまだありません':'まだ口コミがありません'}</span>`}</div>
       ${bar}</div>
+      ${openId!==t.id&&TOP[t.id]&&TOP[t.id].length?`<div class="tops"><span class="th2">👍 参考になった口コミ</span>${TOP[t.id].map(rvHTML).join('')}</div>`:''}
       <button type="button" class="open" data-id="${t.id}" aria-expanded="${openId===t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>${openId===t.id?'とじる':(s.n?'口コミを見る・書く':'最初の口コミを書く')}</button>
       ${shop}
       ${openId===t.id?`<div class="panel" id="panel"></div>`:''}</article>`}).join('');
   if(openId)loadPanel(openId);
 }
 $('list').addEventListener('click',e=>{const b=e.target.closest('.open');if(b){openId=openId===b.dataset.id?null:b.dataset.id;render();if(openId)$('t-'+openId).scrollIntoView({block:'start',behavior:'smooth'});return}
-  const r=e.target.closest('.rep');if(r)report(r);});
+  const r=e.target.closest('.rep');if(r)report(r);const h=e.target.closest('.hl');if(h)helpful(h);});
 
+let VOTED=[];try{VOTED=JSON.parse(localStorage.getItem('nekomawari-helpful')||'[]')}catch(e){}
+const voted=id=>VOTED.includes(id);
+function rvHTML(r){return `<div class="rv"><div class="meta">${starHTML(r.stars)}<span class="chip">${AGES[r.age]||''}</span>${(r.traits||'').split(',').filter(Boolean).map(t=>`<span class="chip">${TRAITS[t]||''}</span>`).join('')}<span class="chip" style="border-color:var(${(DAYS[r.days]||['','--line'])[1]})">${(DAYS[r.days]||[''])[0]}</span>
+     <button type="button" class="rep" data-id="${r.id}">通報</button></div>${r.comment?`<p>${esc(r.comment)}</p>`:''}<div class="ft"><button type="button" class="hl${voted(r.id)?' on':''}" data-id="${r.id}" aria-pressed="${voted(r.id)}">👍 参考になった<b>${r.helpful||0}</b></button><span class="small muted">${new Date(r.created_at).toLocaleDateString('ja-JP')}</span></div></div>`}
+async function helpful(b){const id=+b.dataset.id;if(voted(id))return;b.classList.add('on');b.setAttribute('aria-pressed','true');
+  try{const d=await (await fetch('/api/helpful',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id})})).json();
+    VOTED.push(id);try{localStorage.setItem('nekomawari-helpful',JSON.stringify(VOTED.slice(-500)))}catch(e){}
+    document.querySelectorAll(`.hl[data-id="${id}"]`).forEach(x=>{x.classList.add('on');x.setAttribute('aria-pressed','true');x.querySelector('b').textContent=d.helpful})}catch(e){b.classList.remove('on')}}
 async function loadPanel(id){
   const p=$('panel');p.innerHTML='<p class="empty">読みこみ中…</p>';
   let rows=[];try{rows=(await (await fetch('/api/reviews?toy='+id)).json()).reviews||[]}catch(e){}
   if(openId!==id)return;
   const dleg=`<div class="dleg">${Object.values(DAYS).map(([n,c])=>`<span><i style="background:var(${c})"></i>${n}</span>`).join('')}</div>`;
-  p.innerHTML=dleg+(rows.length?rows.map(r=>`<div class="rv"><div class="meta">${starHTML(r.stars)}<span class="chip">${AGES[r.age]||''}</span>${(r.traits||'').split(',').filter(Boolean).map(t=>`<span class="chip">${TRAITS[t]||''}</span>`).join('')}<span class="chip" style="border-color:var(${(DAYS[r.days]||['','--line'])[1]})">${(DAYS[r.days]||[''])[0]}</span>
-     <button type="button" class="rep" data-id="${r.id}">通報</button></div>${r.comment?`<p>${esc(r.comment)}</p>`:''}<span class="small muted">${new Date(r.created_at).toLocaleDateString('ja-JP')}</span></div>`).join(''):'<p class="empty">まだ口コミがありません。食べさせてみた感想を、最初に書いてみませんか？</p>')
+  p.innerHTML=dleg+(rows.length?rows.map(rvHTML).join(''):'<p class="empty">まだ口コミがありません。食べさせてみた感想を、最初に書いてみませんか？</p>')
   +formHTML(id);
   bindForm(id);
 }
@@ -255,7 +288,7 @@ async function report(b){
   if(!confirm('この口コミを通報しますか？ 3人から通報されると表示されなくなります。'))return;
   try{await fetch('/api/report',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:+b.dataset.id})});b.textContent='通報しました';b.dataset.done=1}catch(e){}
 }
-async function loadSummary(){try{SUM=(await (await fetch('/api/reviews')).json()).summary||{}}catch(e){SUM={}}}
+async function loadSummary(){try{const d=await (await fetch('/api/reviews')).json();SUM=d.summary||{};TOP=d.top||{}}catch(e){SUM={};TOP={}}}
 
 // おもちゃのリクエスト
 $('rqf').addEventListener('submit',async e=>{e.preventDefault();const m=$('rqMsg');
