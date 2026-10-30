@@ -93,11 +93,22 @@
 .rv .ft{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 @media (max-width:640px){.toy{grid-template-columns:72px 1fr;grid-template-areas:"ph info" "pk pk" "open open" "shop shop" "panel panel"}.toy .ph{width:72px;height:72px}
  .toy .shop{flex-direction:row;align-items:center;justify-content:flex-end;border-left:0;padding-left:0;flex-wrap:wrap}}
+
+.wrap.wide{max-width:1140px}
+.wrap.wide>*:not(.browse){width:100%;max-width:820px;margin-left:auto;margin-right:auto}
+.browse{display:flex;flex-direction:column;gap:22px}
+@media (min-width:1000px){
+ .browse{display:grid;grid-template-columns:290px minmax(0,1fr);gap:20px;align-items:start}
+ .browse .filters{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding:18px}
+ .browse .filters .seg{flex-wrap:wrap}
+ .browse .filters .sortrow{flex-direction:column;align-items:stretch}
+ .browse .filters h2{font-size:17px}
+}
 </style>
 <script src="/site.js"></script>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap wide">
   <header class="brand">
     <a class="mark" href="/" aria-label="ねこまわりのトップへ"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M7.5 9.5 9 4.5l4 5zM24.5 9.5 23 4.5l-4 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 10h19l-2 15.2a2 2 0 0 1-2 1.8h-11a2 2 0 0 1-2-1.8z" fill="currentColor"/><path d="M11 15h4.5M11 19h6.5M11 23h4.5" stroke="var(--green)" stroke-width="2.2" stroke-linecap="round"/></svg></a>
     <div>
@@ -115,7 +126,8 @@
   </div>
   <p class="flow"><span><i>1</i>しぼりこむ</span><em>→</em><span><i>2</i>口コミを見る</span><em>→</em><span><i>3</i>書く・リクエスト</span></p>
 
-  <section class="card filters" aria-label="しぼりこみ">
+  <div class="browse">
+  <aside class="card filters" aria-label="しぼりこみ">
     <h2><span class="stepn">1</span>しぼりこむ</h2>
     <div class="qbox"><label class="lbl" for="fQ">フードの名前でさがす</label><div class="qin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="fQ" class="txt" type="search" placeholder="例：tama、チキン、モグニャン" autocomplete="off" enterkeyhint="search"><button type="button" id="fQx" aria-label="けす" hidden>×</button></div></div>
     <div><span class="lbl">猫の年齢</span>
@@ -124,9 +136,10 @@
       <div class="seg" id="fType"><button type="button" data-v="" aria-pressed="true">すべて</button></div></div>
     <div class="sortrow"><span class="small muted"><span id="countNote">読みこみ中…</span>　<a href="#request">ないフードをリクエスト</a></span>
       <div class="seg" id="fSort"><button type="button" data-v="stars" aria-pressed="true">食いつきがいい順</button><button type="button" data-v="n" aria-pressed="false">口コミが多い順</button></div></div>
-  </section>
+  </aside>
 
   <div class="toylist" id="list"></div>
+  </div>
 
   <section class="card" id="request" aria-label="フードのリクエスト">
     <h2><span class="stepn" style="background:var(--rose)">＋</span>リストにないフードをリクエスト</h2>
