@@ -15,10 +15,10 @@ export async function onRequestGet({ request, env }) {
   const { results } = await env.DB.prepare(
     'SELECT id, toy, age, traits, stars, days, comment, created_at, helpful FROM reviews WHERE hidden=0 ORDER BY helpful DESC, created_at DESC'
   ).all();
-  // 「参考になった」が多い口コミを、おもちゃ・フードごとに2件まで（ひとことがあるものだけ）
+  // カードに出す口コミ2件：「参考になった」が多い順。同じ数なら、ひとことがあるもの→新しいもの
   const top = {};
-  for (const r of results) {
-    if (!r.comment || !r.helpful) continue;
+  const sorted = results.slice().sort((a, b) => (b.helpful - a.helpful) || ((b.comment ? 1 : 0) - (a.comment ? 1 : 0)) || (b.created_at - a.created_at));
+  for (const r of sorted) {
     const t = top[r.toy] = top[r.toy] || [];
     if (t.length < 2) t.push({ id: r.id, age: r.age, traits: r.traits, stars: r.stars, days: r.days, comment: r.comment, created_at: r.created_at, helpful: r.helpful });
   }

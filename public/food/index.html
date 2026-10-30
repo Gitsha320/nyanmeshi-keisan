@@ -232,7 +232,7 @@ function render(){
       <div class="info"><span class="tp" style="background:var(${tc});color:#fff">${tn}</span><span class="tp tg">${TAG[t.t]}</span><h3><small class="bn">${esc(t.b)}</small>${esc(t.n)}</h3><p class="ds">${esc(t.d)}</p>
       <div class="score">${s.n?`${starHTML(s.avg)}<span class="avg">${s.avg.toFixed(1)}</span><span class="cnt">${s.n}件${fAge?'（'+AGES[fAge]+'）':''}</span>`:`<span class="cnt">${fAge&&s.all?AGES[fAge]+'の口コミはまだありません':'まだ口コミがありません'}</span>`}</div>
       ${bar}</div>
-      ${openId!==t.id&&TOP[t.id]&&TOP[t.id].length?`<div class="tops"><span class="th2">👍 参考になった口コミ</span>${TOP[t.id].map(rvHTML).join('')}</div>`:''}
+      ${openId!==t.id&&TOP[t.id]&&TOP[t.id].length?`<div class="tops"><span class="th2">${TOP[t.id][0].helpful?'👍 参考になった口コミ':'🆕 新しい口コミ'}</span>${TOP[t.id].map(rvHTML).join('')}</div>`:''}
       <button type="button" class="open" data-id="${t.id}" aria-expanded="${openId===t.id}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>${openId===t.id?'とじる':(s.n?'口コミを見る・書く':'最初の口コミを書く')}</button>
       ${shop}
       ${openId===t.id?`<div class="panel" id="panel"></div>`:''}</article>`}).join('');
