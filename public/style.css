@@ -138,6 +138,8 @@ footer a{color:inherit}
 .item .bt a{font-weight:800;font-size:12.5px;text-decoration:none;border-radius:999px;padding:5px 12px;color:#fff}
 .item .b-rak{background:#bf0000}
 .item .b-amz{background:#232f3e}
+.item.one{grid-template-columns:1fr}
+.item .b-mk{background:var(--blue)}
 .pr-note{margin:0;font-size:12px;color:var(--sub)}
 @media (max-width:640px){.items{grid-template-columns:1fr}}
 

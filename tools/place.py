@@ -78,6 +78,14 @@ CSS = '''
 /*/pr-css*/
 '''
 
+# Catlog（A8.net 広告リンク。ねこまわり用に管理画面で作ったコードをそのまま）
+CATLOG_MAT = '4BES29+EC6VSY+4WPO+5YRHE'
+CATLOG = ('<div class="grp"><p class="gt"><i style="background:var(--blue)"></i>病院代にそなえる・体調の変化に気づく</p>'
+          '<div class="item one"><div class="tx"><a class="nm" href="https://px.a8.net/svt/ejp?a8mat=' + CATLOG_MAT + '" target="_blank" rel="nofollow sponsored noopener">猫用の首輪型デバイス Catlog（キャトログ）</a>'
+          '<span class="nt">首輪につけて、食事・睡眠・運動などの毎日の行動を記録。いつもとちがう様子に早めに気づけると、病院に行くタイミングを考えやすくなります。</span>'
+          '<span class="bt"><a class="b-mk" href="https://px.a8.net/svt/ejp?a8mat=' + CATLOG_MAT + '" target="_blank" rel="nofollow sponsored noopener">Catlogを見る</a></span></div>'
+          '<img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=' + CATLOG_MAT + '" alt="" class="px"></div></div>')
+
 def clean(s):
     s = re.sub(r'\s*<!--pr:(\w+)-->.*?<!--/pr:\1-->', '', s, flags=re.S)
     return re.sub(r'\n?/\*pr-css\*/.*?/\*/pr-css\*/\n?', '\n', s, flags=re.S)
@@ -117,7 +125,7 @@ def main():
          group('切り替え中にあると便利', '--kibble', [TOOLS[0], TOOLS[1]]) + pxi + note)
     fill('okane/index.html', 'okane',
          '<p class="pr-h"><span class="pr-tag">PR</span>毎月のお金をおさえるなら</p>' + group('まとめ買いしやすいもの', '--kibble', [FOOD[0], EXTRA[0]]) +
-         group('長く使えるもの', '--green', [TOOLS[1], TOOLS[3]]) + pxi + note)
+         group('長く使えるもの', '--green', [TOOLS[1], TOOLS[3]]) + CATLOG + pxi + note)
     # 4) おもちゃ口コミ：ページのJSに楽天リンクを入れる
     for of in [os.path.join(PUB, p) for p in ('omocha/index.html', 'okane/index.html', 'food/index.html')]:
       if os.path.exists(of):
